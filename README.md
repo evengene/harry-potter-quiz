@@ -44,6 +44,7 @@ _Pending_
     - Add more questions
     - Add more interactivity
     - Add mobile version
+    - Save to local storage
 
 ## Contribute:
 
