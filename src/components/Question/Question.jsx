@@ -23,7 +23,6 @@ const Question = (props) => {
   }
 
   const onBackHandler = () => {
-    debugger;
     if (currentQuestion > 0) {
       onGoBack()
     }
@@ -41,6 +40,15 @@ const Question = (props) => {
     <Wrapper>
       <div className="wrapper">
         <div className="question-wrapper">
+          <div className="info">
+            Question {index} of {total}
+          </div>
+          <div className="progress-bar">
+            <div
+              className="progress"
+              style={{ width: `${progressValue}%` }}
+            />
+          </div>
           <h3 className="question">
             {question.questionText}
           </h3>
@@ -56,15 +64,8 @@ const Question = (props) => {
             </button>
           ))}
         </div>
-        <div className="info">
-          Question {index} of {total}
-        </div>
-        <div className="progress-bar">
-          <div
-            className="progress"
-            style={{width: `${progressValue}%`}}
-          />
-        </div>
+
+
         <p>{score}</p>
         <button onClick={onBackHandler} className="default-btn outlined-button">
           {COPY.back}

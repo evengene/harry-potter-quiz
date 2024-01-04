@@ -16,6 +16,13 @@ body {
   color: white;
 }
 
+#root {
+  width: 100%;
+  height: 100%;
+  background: darkgray;
+  background: center / cover no-repeat url('./assets/starry-sky.jpg');
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -25,10 +32,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: darkgray;
   width: 100%;
   height: 100%;
-  background: center / cover no-repeat url('./assets/starry-sky.jpg');
   color: white;
 }
 
@@ -100,6 +105,7 @@ body {
   text-align: center;
   /*background: center / cover no-repeat url('./assets/symbol-no-stroke.png');*/
   margin-bottom: 30px;
+  flex-direction: column;
 }
 
 .question-wrapper:after {
@@ -178,7 +184,7 @@ body {
 .default-btn {
   width: 200px;
   height: 50px;
-  text-transform: capitalize;
+  text-transform: uppercase;
   font-size: 15px;
   background: #544570;
   color: white;
@@ -186,6 +192,7 @@ body {
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-weight: 700;
 }
 
 .default-btn:hover {
@@ -245,4 +252,75 @@ body {
   max-width: 200px;
 }
 
+@media screen and (max-width: 768px) {
+  .wrapper {
+    position: relative;
+    padding: 0 30px;
+  }
+  .question-wrapper {
+    height: 100%;
+    width: 100%;
+  }
+  .question {
+    font-size: 24px;
+    line-height: 1.5;
+  }
+  .answer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .question-wrapper:after {
+    width: 100%;
+  }
+  .progress-bar {
+    width: 100%;
+  }
+  .outlined-button {
+    height: 50px;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    width: 100%;
+    height: 100%;
+    transform: none;
+    top: 0;
+    left: 0;
+    display: block;
+  }
+  .intro-description {
+    width: 100%;
+  }
+  .intro-title {
+    width: 100%;
+    font-size: 32px;
+  }
+  .intro-note {
+    font-size: 20px;
+    opacity: 1;
+  }
+  .question {
+    font-size: 22px;
+    padding: 0;
+  }
+  .logo {
+    width: 30px;
+  }
+  .answer-button {
+    font-size: 12px;
+  }
+  .info {
+    margin-top: 30px;
+  }
+  .outlined-button {
+    font-size: 12px;
+  }
+}
 
