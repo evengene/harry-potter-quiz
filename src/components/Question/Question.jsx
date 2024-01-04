@@ -4,21 +4,22 @@ import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Wrapper } from '../Wrapper';
-import { answer, goBack } from '../../actions';
+import { answer, goBack, setHover } from '../../actions';
 import { COPY, QUIZ_DATA as quiz } from '../Quiz/Quiz.constants';
 
 const Question = (props) => {
 
-  const { onAnswer, onGoBack, currentQuestion, score, showScore } = props;
+  const { onAnswer, onGoBack, currentQuestion, score, showScore, isHovered, onSetHover } = props;
   const navigate = useNavigate();
   // let { questionId } = useParams();
   const question = quiz[currentQuestion];
   const index = currentQuestion + 1;
   const total = quiz.length;
 
+
   const progressValue = (index / total) * 100;
 
-  const handleAnswer = (answerOption) => {
+  const handleAnswer = (answerOption) => () => {
       onAnswer(answerOption)
   }
 
@@ -35,7 +36,6 @@ const Question = (props) => {
     }
   }, [showScore])
 
-
   return (
     <Wrapper>
       <div className="wrapper">
@@ -44,10 +44,7 @@ const Question = (props) => {
             Question {index} of {total}
           </div>
           <div className="progress-bar">
-            <div
-              className="progress"
-              style={{ width: `${progressValue}%` }}
-            />
+            <div className="progress" style={{ width: `${progressValue}%` }} />
           </div>
           <h3 className="question">
             {question.questionText}
@@ -57,8 +54,10 @@ const Question = (props) => {
           {question.answerOptions.map((answerOption, index) => (
             <button
               key={index}
-              className="default-btn answer-button"
-              onClick={() => handleAnswer(answerOption)}
+              onClick={handleAnswer(answerOption)}
+              className={`answer-button ${isHovered ? 'hovered' : ''}`}
+              onMouseEnter={() => onSetHover(true)}
+              onMouseLeave={() => onSetHover(false)}
             >
               {answerOption.text}
             </button>
@@ -75,11 +74,12 @@ const Question = (props) => {
   );
 }
 
-const mapState = ({ currentQuestion, score, showScore }) => ({ currentQuestion, score, showScore });
+const mapState = ({ currentQuestion, score, showScore,  isHovered }) => ({ currentQuestion, score, showScore, isHovered });
 
 const mapDispatch = dispatch => bindActionCreators({
   onAnswer: answer,
   onGoBack: goBack,
+  onSetHover: setHover
 }, dispatch);
 
 export default connect(

@@ -9,6 +9,7 @@ const initialState = {
   showIntro: true,
   showContent: false,
   totalQuestions: QUIZ_DATA.length,
+  isHovered: false,
 }
 
 //updaters
@@ -21,6 +22,7 @@ const handleAnswer = (state, action) => {
       ...state,
       currentQuestion: nextQuestion,
       score: isCorrect ? state.score + 1 : state.score,
+      isHovered: false,
     };
   }
   else {
@@ -28,9 +30,17 @@ const handleAnswer = (state, action) => {
       ...state,
       score: isCorrect ? state.score + 1 : state.score,
       showContent: false,
-      showScore: true
+      showScore: true,
+      isHovered: false,
     };
   }
+}
+
+const setHover = (state, action) => {
+  return {
+    ...state,
+    isHovered: action.payload,
+  };
 }
 
 const handleRestart = () => {
@@ -60,6 +70,7 @@ export default handleActions({
     [actions.restart]: handleRestart,
     [actions.quizStart]: handleQuizStart,
     [actions.goBack]: handleGoBack,
+    [actions.setHover]: setHover,
   },
   initialState
 );
