@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { createStore } from 'redux';
-import { Provider } from 'react-redux';
+import { Analytics } from '@vercel/analytics/react';
 
 import './main.css';
 import { ROUTES } from './routes/Routes.constants';
@@ -37,5 +38,6 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
     <RouterProvider router={router} />
+    <Analytics />
   </Provider>,
 )
