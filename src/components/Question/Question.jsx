@@ -1,40 +1,45 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Wrapper } from '../Wrapper';
-import { answer, goBack, setHover } from '../../actions';
+import { answer, goBack } from '../../actions';
 import { COPY, QUIZ_DATA as quiz } from '../Quiz/Quiz.constants';
 
 const Question = (props) => {
-
-  const { onAnswer, onGoBack, currentQuestion, score, showScore, isHovered, onSetHover } = props;
+  const { onAnswer, onGoBack, currentQuestion, showScore } = props;
   const navigate = useNavigate();
-  // let { questionId } = useParams();
   const question = quiz[currentQuestion];
   const index = currentQuestion + 1;
   const total = quiz.length;
-
-
   const progressValue = (index / total) * 100;
 
-  const handleAnswer = (answerOption) => () => {
-      onAnswer(answerOption)
-  }
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [feedbackCorrect, setFeedbackCorrect] = useState(null);
+
+  const handleAnswer = (answerOption, idx) => () => {
+    if (selectedIndex !== null) return;
+    setSelectedIndex(idx);
+    setFeedbackCorrect(answerOption.isCorrect);
+    setTimeout(() => {
+      onAnswer(answerOption);
+      setSelectedIndex(null);
+      setFeedbackCorrect(null);
+    }, 600);
+  };
 
   const onBackHandler = () => {
     if (currentQuestion > 0) {
-      onGoBack()
-    }
-    else navigate('/');
-  }
+      onGoBack();
+    } else navigate('/');
+  };
 
   useEffect(() => {
     if (showScore) {
-      navigate('/results')
+      navigate('/results');
     }
-  }, [showScore])
+  }, [showScore]);
 
   return (
     <Wrapper>
@@ -50,39 +55,38 @@ const Question = (props) => {
             {question.questionText}
           </h3>
         </div>
-        <div className="answer">
-          {question.answerOptions.map((answerOption, index) => (
+        <div className={`answer${selectedIndex !== null ? ' locked' : ''}`}>
+          {question.answerOptions.map((answerOption, idx) => (
             <button
-              key={index}
-              onClick={handleAnswer(answerOption)}
-              className={`answer-button ${isHovered ? 'hovered' : ''}`}
-              onMouseEnter={() => onSetHover(true)}
-              onMouseLeave={() => onSetHover(false)}
+              key={idx}
+              onClick={handleAnswer(answerOption, idx)}
+              className={`answer-button${
+                selectedIndex === idx
+                  ? feedbackCorrect ? ' correct' : ' incorrect'
+                  : ''
+              }`}
             >
               {answerOption.text}
             </button>
           ))}
         </div>
 
-
-        <p>{score}</p>
         <button onClick={onBackHandler} className="default-btn outlined-button">
           {COPY.back}
         </button>
       </div>
     </Wrapper>
   );
-}
+};
 
-const mapState = ({ currentQuestion, score, showScore,  isHovered }) => ({ currentQuestion, score, showScore, isHovered });
+const mapState = ({ currentQuestion, showScore }) => ({ currentQuestion, showScore });
 
 const mapDispatch = dispatch => bindActionCreators({
   onAnswer: answer,
   onGoBack: goBack,
-  onSetHover: setHover
 }, dispatch);
 
 export default connect(
   mapState,
   mapDispatch
-)(Question)
+)(Question);

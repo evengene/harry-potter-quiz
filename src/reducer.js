@@ -9,10 +9,8 @@ const initialState = {
   showIntro: true,
   showContent: false,
   totalQuestions: QUIZ_DATA.length,
-  isHovered: false,
 }
 
-//updaters
 const handleAnswer = (state, action) => {
   const { isCorrect } = action.payload;
   const nextQuestion = state.currentQuestion + 1;
@@ -22,55 +20,33 @@ const handleAnswer = (state, action) => {
       ...state,
       currentQuestion: nextQuestion,
       score: isCorrect ? state.score + 1 : state.score,
-      isHovered: false,
     };
-  }
-  else {
+  } else {
     return {
       ...state,
       score: isCorrect ? state.score + 1 : state.score,
       showContent: false,
       showScore: true,
-      isHovered: false,
     };
   }
-}
+};
 
-const setHover = (state, action) => {
-  return {
-    ...state,
-    isHovered: action.payload,
-  };
-}
+const handleRestart = () => ({ ...initialState });
 
-const handleRestart = () => {
-  return {
-    ...initialState,
-  };
-}
-
-const handleQuizStart = (state) => {
-  return {
-    ...state,
-    showIntro: false,
-    showContent: true,
-  };
-}
-
-const handleGoBack = (state) => {
-  return {
+const handleQuizStart = (state) => ({
   ...state,
-    currentQuestion: state.currentQuestion - 1,
-  };
-}
+  showIntro: false,
+  showContent: true,
+});
 
+const handleGoBack = (state) => ({
+  ...state,
+  currentQuestion: state.currentQuestion - 1,
+});
 
 export default handleActions({
-    [actions.answer]: handleAnswer,
-    [actions.restart]: handleRestart,
-    [actions.quizStart]: handleQuizStart,
-    [actions.goBack]: handleGoBack,
-    [actions.setHover]: setHover,
-  },
-  initialState
-);
+  [actions.answer]: handleAnswer,
+  [actions.restart]: handleRestart,
+  [actions.quizStart]: handleQuizStart,
+  [actions.goBack]: handleGoBack,
+}, initialState);
