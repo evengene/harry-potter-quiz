@@ -8,10 +8,10 @@ import { answer, goBack } from '../../actions';
 import { COPY, QUIZ_DATA as quiz } from '../Quiz/Quiz.constants';
 
 const Question = (props) => {
-  const { onAnswer, onGoBack, currentQuestion, showScore } = props;
+  const { onAnswer, onGoBack, questionIdx, showScore } = props;
   const navigate = useNavigate();
-  const question = quiz[currentQuestion];
-  const index = currentQuestion + 1;
+  const question = quiz[questionIdx];
+  const index = questionIdx + 1;
   const total = quiz.length;
   const progressValue = (index / total) * 100;
 
@@ -19,18 +19,19 @@ const Question = (props) => {
   const [feedbackCorrect, setFeedbackCorrect] = useState(null);
 
   const handleAnswer = (answerOption, idx) => () => {
+    debugger;
     if (selectedIndex !== null) return;
     setSelectedIndex(idx);
     setFeedbackCorrect(answerOption.isCorrect);
     setTimeout(() => {
-      onAnswer(answerOption);
+      onAnswer({ isCorrect: answerOption.isCorrect, idx });
       setSelectedIndex(null);
       setFeedbackCorrect(null);
     }, 600);
   };
 
   const onBackHandler = () => {
-    if (currentQuestion > 0) {
+    if (questionIdx > 0) {
       onGoBack();
     } else navigate('/');
   };
@@ -52,11 +53,11 @@ const Question = (props) => {
             <div className="progress" style={{ width: `${progressValue}%` }} />
           </div>
           <h3 className="question">
-            {question.questionText}
+            {question?.questionText}
           </h3>
         </div>
         <div className={`answer${selectedIndex !== null ? ' locked' : ''}`}>
-          {question.answerOptions.map((answerOption, idx) => (
+          {question?.answerOptions.map((answerOption, idx) => (
             <button
               key={idx}
               onClick={handleAnswer(answerOption, idx)}
@@ -79,7 +80,7 @@ const Question = (props) => {
   );
 };
 
-const mapState = ({ currentQuestion, showScore }) => ({ currentQuestion, showScore });
+const mapState = ({ questionIdx, showScore }) => ({ questionIdx, showScore });
 
 const mapDispatch = dispatch => bindActionCreators({
   onAnswer: answer,

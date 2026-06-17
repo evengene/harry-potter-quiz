@@ -1,7 +1,10 @@
 import { COPY } from './Result.constants';
 
-export const getMessageBasedOnScore = (score, totalQuestions) => {
-  const percentage = (score / totalQuestions) * 100;
+export const getMessageBasedOnScore = (answers, totalQuestions) => {
+  debugger;
+  const totalCorrectAnswers = answers.filter(answer => answer?.isCorrect).length;
+
+  const percentage = (totalCorrectAnswers / totalQuestions) * 100;
   if (percentage === 100) {
     return COPY.perfect;
   } else if (percentage >= 80) {
@@ -14,3 +17,5 @@ export const getMessageBasedOnScore = (score, totalQuestions) => {
     return COPY.average;
   }
 }
+
+

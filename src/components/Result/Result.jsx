@@ -12,8 +12,8 @@ import { ROUTES } from '../../routes/Routes.constants';
 
 
 const Result = (props) => {
-
-  const {score, totalQuestions, restart } = props;
+debugger;
+  const {answers, totalQuestions, restart } = props;
   const navigate = useNavigate();
 
   const restartClickHandler = () => {
@@ -31,11 +31,12 @@ const Result = (props) => {
           {COPY.score}
         </div>
         <p className="points">
-          {score} / {totalQuestions}
+          {getMessageBasedOnScore(answers, totalQuestions)}
+          / {totalQuestions}
         </p>
       </div>
       <p className="intro-description center">
-        {getMessageBasedOnScore(score, totalQuestions)}
+        {getMessageBasedOnScore(answers, totalQuestions)}
       </p>
       <button onClick={restartClickHandler} className="default-btn">
         {COPY.restart}
@@ -44,8 +45,8 @@ const Result = (props) => {
   )
 };
 
-const mapState = ({ score, totalQuestions }) => ({
-  score,
+const mapState = ({ answers, totalQuestions }) => ({
+  answers,
   totalQuestions,
 });
 
