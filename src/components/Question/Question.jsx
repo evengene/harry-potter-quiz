@@ -19,7 +19,6 @@ const Question = (props) => {
   const [feedbackCorrect, setFeedbackCorrect] = useState(null);
 
   const handleAnswer = (answerOption, idx) => () => {
-    debugger;
     if (selectedIndex !== null) return;
     setSelectedIndex(idx);
     setFeedbackCorrect(answerOption.isCorrect);

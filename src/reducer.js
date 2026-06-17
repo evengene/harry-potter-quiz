@@ -11,7 +11,6 @@ const initialState = {
 }
 
 const handleAnswer = (state, action) => {
-  debugger;
   const { isCorrect, idx } = action.payload;
   const { questionIdx, showScore } = state;
 

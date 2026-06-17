@@ -3,18 +3,21 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
 
-import { getMessageBasedOnScore } from "./Result.utils";
+import { getScore, getMessageBasedOnScore } from "./Result.utils";
 import { COPY } from './Result.constants';
 import { Wrapper } from '../Wrapper';
+import { QUIZ_DATA } from '../Quiz/Quiz.constants';
 
 import { restart } from '../../actions';
 import { ROUTES } from '../../routes/Routes.constants';
 
 
 const Result = (props) => {
-debugger;
-  const {answers, totalQuestions, restart } = props;
+  const { answers, restart } = props;
   const navigate = useNavigate();
+
+  const score = getScore(answers);
+  const totalQuestions = QUIZ_DATA.length;
 
   const restartClickHandler = () => {
     restart();
@@ -31,12 +34,11 @@ debugger;
           {COPY.score}
         </div>
         <p className="points">
-          {getMessageBasedOnScore(answers, totalQuestions)}
-          / {totalQuestions}
+          {score} / {totalQuestions}
         </p>
       </div>
       <p className="intro-description center">
-        {getMessageBasedOnScore(answers, totalQuestions)}
+        {getMessageBasedOnScore(score, totalQuestions)}
       </p>
       <button onClick={restartClickHandler} className="default-btn">
         {COPY.restart}
@@ -45,9 +47,8 @@ debugger;
   )
 };
 
-const mapState = ({ answers, totalQuestions }) => ({
+const mapState = ({ answers }) => ({
   answers,
-  totalQuestions,
 });
 
 const mapDispatch = dispatch => bindActionCreators({
