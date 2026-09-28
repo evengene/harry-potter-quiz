@@ -1,26 +1,71 @@
-@import url('https://fonts.googleapis.com/css?family=Lato:300,400,500&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,500,700&display=swap');
 
 @font-face {
   font-family: 'BluuNext';
   src: url('./fonts/BluuNext-Bold.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------
+   Design tokens — "Refined Nocturne"
+   Change a value here and it changes everywhere it is used.
+   --------------------------------------------------------------- */
+:root {
+  /* Surfaces */
+  --ink: #0C1030;
+  --panel: rgba(21, 27, 68, 0.55);
+  --panel-solid: #151B44;
+  --line: rgba(120, 132, 214, 0.32);
+  --line-strong: rgba(160, 172, 235, 0.5);
+
+  /* Accent + text */
+  --gold: #D8B75A;
+  --gold-bright: #EFD489;
+  --cream: #F2EAD8;
+  --muted: #A9A9C4;
+
+  /* Feedback */
+  --sage: #5B8C5A;
+  --garnet: #A33B3B;
+
+  /* Type */
+  --font-display: 'BluuNext', Georgia, serif;
+  --font-body: 'Lato', system-ui, sans-serif;
+
+  /* Space */
+  --gap-sm: 10px;
+  --gap-md: 20px;
+  --gap-lg: 34px;
+
+  /* Shape */
+  --radius: 10px;
+  --radius-pill: 30px;
+
+  /* Motion — fast on purpose: the question screen is seen ten times
+     in a row, so anything slow becomes an obstacle, not a delight. */
+  --dur-fast: 150ms;
+  --dur: 220ms;
+  --dur-slow: 400ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --stagger: 40ms;
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
-  font-family: 'Lato', sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: white;
+  color: var(--cream);
+  background: var(--ink);
 }
 
 #root {
   width: 100%;
-  height: 100%;
-  background: darkgray;
-  background: center / cover no-repeat url('./assets/starry-sky.jpg');
+  min-height: 100vh;
+  background: var(--ink) center / cover no-repeat url('./assets/starry-sky.jpg');
 }
 
 .container {
@@ -28,212 +73,235 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  min-height: 100vh;
   width: 100%;
-  height: 100%;
-  color: white;
+  padding: 20px 16px;
+  box-sizing: border-box;
+  color: var(--cream);
 }
 
 .logo-wrapper {
-  position: relative;
   display: flex;
   justify-content: center;
-  top: 10px;
+  margin-bottom: 10px;
   z-index: 1;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.logo-wrapper:hover {
+  opacity: 0.75;
 }
 
 .logo {
   width: 60px;
 }
 
+/* ----------------------------- intro ----------------------------- */
+
 .intro {
-  color: white;
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-content: center;
   align-items: center;
+  animation: rise var(--dur-slow) var(--ease) backwards;
 }
 
 .intro-title {
-  font-family: 'BluuNext', sans-serif;
-  font-size: 40px;
-  width: 70%;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1.2;
+  width: min(700px, 100%);
+  margin: 0 0 var(--gap-lg);
+  animation: rise var(--dur-slow) var(--ease) 60ms backwards;
 }
 
 .intro-description {
   font-weight: 400;
-  margin: 50px 0;
-  font-size: 24px;
-  line-height: 1.5;
-  font-family: "Lato", sans-serif;
-  width: 700px;
+  margin: 0 0 var(--gap-lg);
+  font-size: clamp(16px, 2.2vw, 22px);
+  line-height: 1.6;
+  width: min(700px, 100%);
+  color: var(--cream);
+  animation: rise var(--dur-slow) var(--ease) 140ms backwards;
 }
 
 .intro-note {
-  opacity: 0.7;
-  font-family: "Lato", sans-serif;
+  color: var(--muted);
   font-weight: 300;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 13px;
+  margin: 0 0 var(--gap-lg);
+  animation: rise var(--dur-slow) var(--ease) 220ms backwards;
 }
+
+.intro .default-btn {
+  animation: rise var(--dur-slow) var(--ease) 300ms backwards;
+}
+
+/* --------------------------- question ---------------------------- */
 
 .wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-}
-
-.question {
-  font-size: 34px;
-  font-weight: 500;
-  margin-bottom: 1rem;
-  padding: 0 30px;
-  font-family: 'BluuNext', sans-serif;
-  line-height: 1.3;
+  width: 100%;
 }
 
 .question-wrapper {
-  width: 650px;
-  height: 300px;
+  position: relative;
+  width: min(650px, 100%);
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  /*background: center / cover no-repeat url('./assets/symbol-no-stroke.png');*/
-  margin-bottom: 30px;
   flex-direction: column;
+  padding: var(--gap-lg) 0;
+  margin-bottom: var(--gap-md);
 }
 
-.question-wrapper:after {
+.question-wrapper > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* The thin-line geometry, framing the question as a real motif
+   rather than sitting behind the whole header as a smudge. */
+.question:before {
   content: "";
   position: absolute;
-  width: 500px;
-  height: 500px;
-  background: center / cover no-repeat url('./assets/symbol-no-stroke.png');
-  filter: blur(3px);
-  opacity: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, 84vw);
+  aspect-ratio: 1;
+  background: center / contain no-repeat url('./assets/symbol-thin.png');
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.question {
+  font-size: clamp(20px, 3.4vw, 32px);
+  font-weight: 500;
+  margin: 0;
+  padding: 0 20px;
+  font-family: var(--font-display);
+  line-height: 1.35;
+  animation: rise var(--dur) var(--ease) backwards;
+}
+
+.info {
+  color: var(--muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.progress-bar {
+  margin: var(--gap-md) 0 var(--gap-lg);
+  width: min(400px, 100%);
+  height: 3px;
+  background-color: var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: var(--gold);
+  border-radius: inherit;
+  transition: width var(--dur-slow) var(--ease);
 }
 
 .answer {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 10px;
+  gap: var(--gap-sm);
   z-index: 1;
+  width: min(620px, 100%);
 }
 
-.progress-bar {
-  margin: 2rem;
-  width: 400px;
-  height: 4px;
-  background-color: #E4E4E4;
-  border-radius: 10px;
-}
-
-.progress {
-  height: 100%;
-  background: linear-gradient(to right, #3A7044, #6CBD7A);
-  border-radius: inherit;
-  transition: width 0.4s ease;
-}
-
-.result-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #ffffff0f;
-  width: 400px;
-  height: 400px;
-  margin: 60px;
-}
-
-.result-wrapper:before {
-  content: "";
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  background: center / cover no-repeat url('./assets/symbol-thin.png');
-  opacity: 1;
-}
-
-.result {
-  font-size: 24px;
-  font-weight: 500;
-}
-
-.points {
-  font-size: 32px;
-  font-weight: 500;
-}
-
-.restart-btn {
-  display: block;
-  font-size: 1.5rem;
-  font-weight: 300;
-  padding: 0.5rem 1rem;
-  margin: 0.5rem;
-  border: 1px solid #000;
-  border-radius: 5px;
-  background-color: #FFF;
-  cursor: pointer;
-}
+/* ---------------------------- buttons ---------------------------- */
 
 .default-btn {
-  width: 200px;
-  height: 50px;
+  min-width: 200px;
+  min-height: 50px;
+  padding: 0 28px;
   text-transform: uppercase;
-  font-size: 15px;
-  background: #544570;
-  color: white;
-  border-radius: 30px;
-  border: none;
+  letter-spacing: 0.1em;
+  font-size: 14px;
+  font-family: var(--font-body);
+  background: var(--gold);
+  color: var(--ink);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--gold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease), opacity var(--dur) var(--ease);
   font-weight: 700;
 }
 
 .default-btn:hover:not(:disabled) {
-  background: #8262BD;
-  color: white;
+  background: var(--gold-bright);
+  border-color: var(--gold-bright);
+  transform: scale(1.03);
+}
+
+.default-btn:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .default-btn:disabled {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: default;
 }
 
 .answer-button {
-  width: 300px;
-  border-radius: 10px;
-  background-color: #FFF;
-  color: black;
-  height: 50px;
-  text-transform: uppercase;
+  width: 100%;
+  min-height: 56px;
+  padding: 14px 20px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--cream);
   font-size: 15px;
-  border: none;
+  font-family: var(--font-body);
+  border: 1px solid var(--line);
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
-  font-weight: 700;
+  font-weight: 400;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease), transform var(--dur-fast) var(--ease);
+  animation: rise var(--dur) var(--ease) backwards;
 }
 
+.answer-button:nth-child(1) { animation-delay: 0ms; }
+.answer-button:nth-child(2) { animation-delay: var(--stagger); }
+.answer-button:nth-child(3) { animation-delay: calc(var(--stagger) * 2); }
+.answer-button:nth-child(4) { animation-delay: calc(var(--stagger) * 3); }
+
 .answer-button:hover {
-  background: #8262BD;
-  color: white;
+  border-color: var(--gold);
+  color: var(--gold-bright);
+  transform: translateY(-2px);
+}
+
+.answer-button:active {
+  transform: translateY(0) scale(0.99);
 }
 
 .answer-button.correct {
-  background: #3A7044;
-  color: white;
+  background: var(--sage);
+  border-color: var(--sage);
+  color: #fff;
   transform: scale(1.03);
 }
 
 .answer-button.incorrect {
-  background: #8B2222;
-  color: white;
+  background: var(--garnet);
+  border-color: var(--garnet);
+  color: #fff;
   transform: scale(1.03);
 }
 
@@ -243,23 +311,62 @@ body {
 }
 
 .outlined-button {
-  background-color: transparent;
-  border: 1px solid #FFF;
-  margin: 20px 0;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--muted);
+  margin: var(--gap-md) 0 0;
 }
 
-.outlined-button:hover {
-  background-color: transparent;
+.outlined-button:hover:not(:disabled) {
+  background: transparent;
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
+/* ---------------------------- result ----------------------------- */
 
-.info {
-  margin-top: 50px;
+.result-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: min(400px, 88vw);
+  aspect-ratio: 1;
+  margin: var(--gap-lg) 0;
+  animation: rise var(--dur-slow) var(--ease) 80ms backwards;
+}
+
+.result-wrapper:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: center / contain no-repeat url('./assets/symbol-thin.png');
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.result {
+  font-size: 20px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  z-index: 1;
+}
+
+.points {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 7vw, 54px);
+  color: var(--gold);
+  margin: var(--gap-sm) 0 0;
+  z-index: 1;
 }
 
 .center {
   text-align: center;
 }
+
+/* --------------------------- levels ------------------------------ */
 
 .blocks {
   display: flex;
@@ -284,75 +391,51 @@ body {
   max-width: 200px;
 }
 
+/* ---------------------------- motion ----------------------------- */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Anyone who asks for less motion gets none of it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --------------------------- responsive -------------------------- */
+
 @media screen and (max-width: 768px) {
-  .wrapper {
-    position: relative;
-    padding: 0 30px;
-  }
-  .question-wrapper {
-    height: 100%;
-    width: 100%;
-  }
-  .question {
-    font-size: 24px;
-    line-height: 1.5;
+  .container {
+    padding: 16px;
   }
   .answer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    grid-template-columns: 1fr;
   }
-  .question-wrapper:after {
-    width: 100%;
+  .question-wrapper {
+    padding: var(--gap-md) 0;
   }
-  .progress-bar {
-    width: 100%;
-  }
-  .outlined-button {
-    height: 50px;
-    padding: 20px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  /* Keep the motif a halo behind the question, not a sprawl over the answers. */
+  .question:before {
+    width: min(290px, 68vw);
+    opacity: 0.12;
   }
 }
 
 @media screen and (max-width: 600px) {
-  .container {
-    width: 100%;
-    height: 100%;
-    transform: none;
-    top: 0;
-    left: 0;
-    display: block;
+  .logo {
+    width: 38px;
   }
   .intro-description {
+    margin-bottom: var(--gap-md);
+  }
+  .default-btn {
     width: 100%;
-  }
-  .intro-title {
-    width: 100%;
-    font-size: 32px;
-  }
-  .intro-note {
-    font-size: 20px;
-    opacity: 1;
-  }
-  .question {
-    font-size: 22px;
-    padding: 0;
-  }
-  .logo {
-    width: 30px;
-  }
-  .answer-button {
-    font-size: 12px;
-  }
-  .info {
-    margin-top: 30px;
-  }
-  .outlined-button {
-    font-size: 12px;
   }
 }
-

@@ -63,11 +63,11 @@ const Question = () => {
           <div className="progress-bar">
             <div className="progress" style={{ width: `${progressValue}%` }} />
           </div>
-          <h3 className="question">
+          <h3 className="question" key={questionIdx}>
             {question?.questionText}
           </h3>
         </div>
-        <div className={`answer${isShowingFeedback ? ' locked' : ''}`}>
+        <div key={questionIdx} className={`answer${isShowingFeedback ? ' locked' : ''}`}>
           {question?.answerOptions.map((answerOption, idx) => (
             <button
               key={idx}
