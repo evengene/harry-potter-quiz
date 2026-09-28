@@ -39,7 +39,7 @@ const Question = (props) => {
     if (showScore) {
       navigate('/results');
     }
-  }, [showScore]);
+  }, [showScore, navigate]);
 
   return (
     <Wrapper>
