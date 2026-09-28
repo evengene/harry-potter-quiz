@@ -70,8 +70,12 @@ body {
 /* ------------------------------ nav ------------------------------ */
 
 .site-nav {
-  position: relative;
-  z-index: 1;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: rgba(9, 13, 20, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   gap: var(--gap-md);
@@ -172,6 +176,121 @@ body {
   pointer-events: none;
 }
 
+/* ------------------------- scrolling hero ------------------------ */
+
+/* A tall stage with a sticky film inside it: the film holds still for
+   three screens while the chapters travel over it. Pure CSS — no scroll
+   listener, no library. */
+.stage {
+  position: relative;
+  flex-shrink: 0;
+  height: 320vh;
+}
+
+.stage-film {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.stage-chapters {
+  position: relative;
+  z-index: 2;
+  margin-top: -100vh; /* lift the copy back over the film */
+}
+
+.stage-chapter {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+}
+
+.stage-chapter.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 7vw, 82px);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.12;
+  text-transform: uppercase;
+  margin: 26px 0 0;
+}
+
+.scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 54px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ------------------------- the pinned film ----------------------- */
+
+.hero-scene {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 55% at 50% 72%, #1B2A3A 0%, #101822 42%, var(--ink) 78%);
+}
+
+.hero-sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-castle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 130px;
+  width: 100%;
+  height: 380px;
+}
+
+.hero-candles {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 150px;
+}
+
+.hero-windows rect {
+  opacity: 0.5;
+}
+
+.hero-flame {
+  transform-origin: center bottom;
+  animation: flicker 3.4s ease-in-out infinite alternate;
+}
+
+.hero-flame:nth-of-type(2) { animation-duration: 2.7s; }
+.hero-flame:nth-of-type(3) { animation-duration: 4.1s; }
+
+@keyframes flicker {
+  from { opacity: 0.75; transform: scaleY(0.94); }
+  to   { opacity: 1; transform: scaleY(1.06); }
+}
+
 /* ----------------------------- intro ----------------------------- */
 
 .intro {
@@ -199,6 +318,7 @@ body {
   text-transform: uppercase;
   width: min(820px, 100%);
   margin: 0;
+  text-align: center;
   animation: rise var(--dur-slow) var(--ease) 60ms backwards;
 }
 
@@ -208,6 +328,7 @@ body {
   font-size: clamp(16px, 2vw, 20px);
   line-height: 1.7;
   width: min(520px, 100%);
+  text-align: center;
   color: #96A6B8;
   animation: rise var(--dur-slow) var(--ease) 140ms backwards;
 }
@@ -682,6 +803,13 @@ body {
   .mote {
     display: none;
   }
+  .stage-chapter {
+    opacity: 1;
+    transform: none;
+  }
+  .hero-flame {
+    animation: none !important;
+  }
 }
 
 /* --------------------------- responsive -------------------------- */
@@ -709,6 +837,10 @@ body {
   }
   .quiz-panel {
     padding: 22px 18px 28px;
+  }
+  .hero-castle {
+    bottom: 100px;
+    height: 260px;
   }
   .answer-button {
     padding: 16px 26px;

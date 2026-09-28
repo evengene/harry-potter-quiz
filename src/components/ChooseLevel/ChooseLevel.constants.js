@@ -1,6 +1,6 @@
 export const COPY = {
   eyebrow: 'Choose your trial',
-  title: 'Three volumes',
+  title: 'Three levels',
 }
 
 export const LEVELS = [

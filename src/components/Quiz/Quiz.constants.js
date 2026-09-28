@@ -92,6 +92,9 @@ export const QUIZ_DATA = [
 ];
 
 export const COPY = {
+  school: 'Hogwarts School of Witchcraft and Wizardry',
+  heroTitle: 'The Trivia Trials',
+  scrollCue: 'Scroll',
   eyebrow: 'Your trial awaits',
   title: 'Test your wizarding knowledge',
   description: 'Ten questions stand between you and the title of true fan. Mind the trick answers \u2014 the Marauder\u2019s Map will not help you here.',
