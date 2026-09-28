@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/hp-logo.svg';
-import React from 'react';
 import { ROUTES } from '../../routes/Routes.constants';
 
 export const Wrapper = ({ children }) => {

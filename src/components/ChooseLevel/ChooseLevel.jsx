@@ -1,5 +1,4 @@
 import { Wrapper } from '../Wrapper';
-import React from 'react';
 
 import Img from '../../assets/symbol-thin.png';
 
