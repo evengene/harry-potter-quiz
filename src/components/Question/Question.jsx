@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -6,9 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { Wrapper } from '../Wrapper';
 import { answer, goBack } from '../../actions';
 import { COPY, QUIZ_DATA as quiz } from '../Quiz/Quiz.constants';
+import { ROUTES } from '../../routes/Routes.constants';
+
+const FEEDBACK_MS = 600;
 
 const Question = (props) => {
-  const { onAnswer, onGoBack, questionIdx, showScore } = props;
+  const { onAnswer, onGoBack, questionIdx, showScore, hasStarted } = props;
   const navigate = useNavigate();
   const question = quiz[questionIdx];
   const index = questionIdx + 1;
@@ -17,29 +20,36 @@ const Question = (props) => {
 
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [feedbackCorrect, setFeedbackCorrect] = useState(null);
+  const feedbackTimer = useRef(null);
+
+  const isShowingFeedback = selectedIndex !== null;
+
+  useEffect(() => () => clearTimeout(feedbackTimer.current), []);
 
   const handleAnswer = (answerOption, idx) => () => {
-    if (selectedIndex !== null) return;
+    if (isShowingFeedback) return;
     setSelectedIndex(idx);
     setFeedbackCorrect(answerOption.isCorrect);
-    setTimeout(() => {
+    feedbackTimer.current = setTimeout(() => {
       onAnswer({ isCorrect: answerOption.isCorrect, idx });
       setSelectedIndex(null);
       setFeedbackCorrect(null);
-    }, 600);
+    }, FEEDBACK_MS);
   };
 
   const onBackHandler = () => {
     if (questionIdx > 0) {
       onGoBack();
-    } else navigate('/');
+    } else navigate(ROUTES.home);
   };
 
   useEffect(() => {
     if (showScore) {
-      navigate('/results');
+      navigate(ROUTES.results, { replace: true });
+    } else if (!hasStarted) {
+      navigate(ROUTES.home, { replace: true });
     }
-  }, [showScore, navigate]);
+  }, [showScore, hasStarted, navigate]);
 
   return (
     <Wrapper>
@@ -55,7 +65,7 @@ const Question = (props) => {
             {question?.questionText}
           </h3>
         </div>
-        <div className={`answer${selectedIndex !== null ? ' locked' : ''}`}>
+        <div className={`answer${isShowingFeedback ? ' locked' : ''}`}>
           {question?.answerOptions.map((answerOption, idx) => (
             <button
               key={idx}
@@ -71,7 +81,11 @@ const Question = (props) => {
           ))}
         </div>
 
-        <button onClick={onBackHandler} className="default-btn outlined-button">
+        <button
+          onClick={onBackHandler}
+          disabled={isShowingFeedback}
+          className="default-btn outlined-button"
+        >
           {COPY.back}
         </button>
       </div>
@@ -79,7 +93,11 @@ const Question = (props) => {
   );
 };
 
-const mapState = ({ questionIdx, showScore }) => ({ questionIdx, showScore });
+const mapState = ({ questionIdx, showScore, hasStarted }) => ({
+  questionIdx,
+  showScore,
+  hasStarted,
+});
 
 const mapDispatch = dispatch => bindActionCreators({
   onAnswer: answer,

@@ -6,8 +6,7 @@ const initialState = {
   questionIdx: 0,
   answers: [],
   showScore: false,
-  showIntro: true,
-  showContent: false,
+  hasStarted: false,
 }
 
 const handleAnswer = (state, action) => {
@@ -32,13 +31,12 @@ const handleRestart = () => ({ ...initialState });
 
 const handleQuizStart = (state) => ({
   ...state,
-  showIntro: false,
-  showContent: true,
+  hasStarted: true,
 });
 
 const handleGoBack = (state) => ({
   ...state,
-  questionIdx: state.questionIdx - 1,
+  questionIdx: Math.max(0, state.questionIdx - 1),
 });
 
 export default handleActions({

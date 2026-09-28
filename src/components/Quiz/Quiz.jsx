@@ -9,12 +9,12 @@ import { quizStart } from '../../actions';
 import { ROUTES } from '../../routes/Routes.constants';
 
 
-const Quiz = () => {
+const Quiz = ({ onQuizStart }) => {
 
   const navigate = useNavigate();
 
   const onStartHandler = () => {
-    quizStart();
+    onQuizStart();
     navigate(ROUTES.questions)
   }
 
@@ -33,9 +33,10 @@ const Quiz = () => {
 }
 
 const mapDispatch = dispatch => bindActionCreators({
-  quizStart
+  onQuizStart: quizStart,
 }, dispatch);
 
 export default connect(
+  null,
   mapDispatch
 )(Quiz)

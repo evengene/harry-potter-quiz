@@ -5,5 +5,6 @@ export const COPY = {
   excellent: 'Almost there! Try one more time to get a perfect score!',
   good: 'Great effort! Try one more time to get a perfect score!',
   average: 'Good effort! Try one more time to get a perfect score!',
+  low: 'Back to the library with you! Give it another go.',
   restart: 'Restart'
 }

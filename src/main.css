@@ -196,9 +196,14 @@ body {
   font-weight: 700;
 }
 
-.default-btn:hover {
+.default-btn:hover:not(:disabled) {
   background: #8262BD;
   color: white;
+}
+
+.default-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 .answer-button {

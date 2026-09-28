@@ -11,6 +11,6 @@ export const getMessageBasedOnScore = (score, totalQuestions) => {
   if (percentage >= 80) return COPY.excellent;
   if (percentage >= 60) return COPY.good;
   if (percentage >= 40) return COPY.average;
-  return COPY.average;
+  return COPY.low;
 };
 
