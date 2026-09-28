@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Wrapper } from '../Wrapper';
-import { answer, goBack } from '../../actions';
+import { answer, goBack } from '../../quizSlice';
 import { COPY, QUIZ_DATA as quiz } from '../Quiz/Quiz.constants';
 import { ROUTES } from '../../routes/Routes.constants';
 
 const FEEDBACK_MS = 600;
 
-const Question = (props) => {
-  const { onAnswer, onGoBack, questionIdx, showScore, hasStarted } = props;
+const Question = () => {
+  const dispatch = useDispatch();
+  const questionIdx = useSelector((state) => state.quiz.questionIdx);
+  const showScore = useSelector((state) => state.quiz.showScore);
+  const hasStarted = useSelector((state) => state.quiz.hasStarted);
   const navigate = useNavigate();
   const question = quiz[questionIdx];
   const index = questionIdx + 1;
@@ -31,7 +33,7 @@ const Question = (props) => {
     setSelectedIndex(idx);
     setFeedbackCorrect(answerOption.isCorrect);
     feedbackTimer.current = setTimeout(() => {
-      onAnswer({ isCorrect: answerOption.isCorrect, idx });
+      dispatch(answer({ isCorrect: answerOption.isCorrect, idx }));
       setSelectedIndex(null);
       setFeedbackCorrect(null);
     }, FEEDBACK_MS);
@@ -39,7 +41,7 @@ const Question = (props) => {
 
   const onBackHandler = () => {
     if (questionIdx > 0) {
-      onGoBack();
+      dispatch(goBack());
     } else navigate(ROUTES.home);
   };
 
@@ -93,18 +95,4 @@ const Question = (props) => {
   );
 };
 
-const mapState = ({ questionIdx, showScore, hasStarted }) => ({
-  questionIdx,
-  showScore,
-  hasStarted,
-});
-
-const mapDispatch = dispatch => bindActionCreators({
-  onAnswer: answer,
-  onGoBack: goBack,
-}, dispatch);
-
-export default connect(
-  mapState,
-  mapDispatch
-)(Question);
+export default Question;

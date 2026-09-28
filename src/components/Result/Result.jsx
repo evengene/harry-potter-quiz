@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { getScore, getMessageBasedOnScore } from "./Result.utils";
@@ -8,12 +7,13 @@ import { COPY } from './Result.constants';
 import { Wrapper } from '../Wrapper';
 import { QUIZ_DATA } from '../Quiz/Quiz.constants';
 
-import { restart } from '../../actions';
+import { restart } from '../../quizSlice';
 import { ROUTES } from '../../routes/Routes.constants';
 
-
-const Result = (props) => {
-  const { answers, showScore, onRestart } = props;
+const Result = () => {
+  const dispatch = useDispatch();
+  const answers = useSelector((state) => state.quiz.answers);
+  const showScore = useSelector((state) => state.quiz.showScore);
   const navigate = useNavigate();
 
   const score = getScore(answers);
@@ -26,9 +26,9 @@ const Result = (props) => {
   }, [showScore, navigate]);
 
   const restartClickHandler = () => {
-    onRestart();
+    dispatch(restart());
     navigate(ROUTES.home);
-  }
+  };
 
   return (
     <Wrapper>
@@ -50,20 +50,7 @@ const Result = (props) => {
         {COPY.restart}
       </button>
     </Wrapper>
-  )
+  );
 };
 
-const mapState = ({ answers, showScore }) => ({
-  answers,
-  showScore,
-});
-
-const mapDispatch = dispatch => bindActionCreators({
-  onRestart: restart,
-}, dispatch);
-
-
-export default connect(
-  mapState,
-  mapDispatch
-)(Result)
+export default Result;

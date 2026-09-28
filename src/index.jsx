@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { createStore } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { Analytics } from '@vercel/analytics/react';
 
 import './main.css';
@@ -9,7 +9,7 @@ import { ROUTES } from './routes/Routes.constants';
 import Question from './components/Question/Question';
 import Quiz from './components/Quiz/Quiz';
 import Result from './components/Result/Result';
-import reducer from './reducer';
+import quizReducer from './quizSlice';
 // import { ChooseLevel } from './components/ChooseLevel/ChooseLevel';
 
 const router = createBrowserRouter([
@@ -31,7 +31,11 @@ const router = createBrowserRouter([
   }
 ]);
 
-const store = createStore(reducer);
+const store = configureStore({
+  reducer: {
+    quiz: quizReducer,
+  },
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

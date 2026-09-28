@@ -1,21 +1,19 @@
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { COPY } from './Quiz.constants';
 import { Wrapper } from '../Wrapper';
-import { quizStart } from '../../actions';
+import { quizStart } from '../../quizSlice';
 import { ROUTES } from '../../routes/Routes.constants';
 
-
-const Quiz = ({ onQuizStart }) => {
-
+const Quiz = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onStartHandler = () => {
-    onQuizStart();
-    navigate(ROUTES.questions)
-  }
+    dispatch(quizStart());
+    navigate(ROUTES.questions);
+  };
 
   return (
     <Wrapper>
@@ -28,14 +26,7 @@ const Quiz = ({ onQuizStart }) => {
         </button>
       </div>
     </Wrapper>
-  )
-}
+  );
+};
 
-const mapDispatch = dispatch => bindActionCreators({
-  onQuizStart: quizStart,
-}, dispatch);
-
-export default connect(
-  null,
-  mapDispatch
-)(Quiz)
+export default Quiz;

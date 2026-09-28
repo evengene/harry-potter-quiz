@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import reducer from './reducer';
-import { answer, goBack, quizStart, restart } from './actions';
+import reducer, { answer, goBack, quizStart, restart } from './quizSlice';
 import { QUIZ_DATA } from './components/Quiz/Quiz.constants';
 
 const initial = reducer(undefined, { type: '@@INIT' });
