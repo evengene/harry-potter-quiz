@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { getScore, getMessageBasedOnScore } from "./Result.utils";
 import { COPY } from './Result.constants';
 import { Wrapper } from '../Wrapper';
+import { Sigil } from '../Sigil';
 import { QUIZ_DATA } from '../Quiz/Quiz.constants';
 
 import { restart } from '../../quizSlice';
@@ -32,15 +33,12 @@ const Result = () => {
 
   return (
     <Wrapper>
-      <h3 className="question">
-        {COPY.title}
-      </h3>
+      <span className="eyebrow">{COPY.title}</span>
       <div className="result-wrapper">
-        <div className="result">
-          {COPY.score}
-        </div>
+        <Sigil className="sigil-frame" />
+        <span className="result">{COPY.score}</span>
         <p className="points">
-          {score} / {totalQuestions}
+          {score}<span className="points-total"> / {totalQuestions}</span>
         </p>
       </div>
       <p className="intro-description center">

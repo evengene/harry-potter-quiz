@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import reducer, { answer, goBack, quizStart, restart } from './quizSlice';
+import reducer, { answer, goBack, quizStart, restart, setLevel } from './quizSlice';
 import { QUIZ_DATA } from './components/Quiz/Quiz.constants';
 
 const initial = reducer(undefined, { type: '@@INIT' });
@@ -13,6 +13,7 @@ describe('initial state', () => {
       answers: [],
       showScore: false,
       hasStarted: false,
+      level: 'medium',
     });
   });
 });
@@ -24,6 +25,16 @@ describe('quizStart', () => {
 
   it('leaves the player on the first question', () => {
     expect(reducer(initial, quizStart()).questionIdx).toBe(0);
+  });
+});
+
+describe('setLevel', () => {
+  it('records the chosen difficulty', () => {
+    expect(reducer(initial, setLevel('hard')).level).toBe('hard');
+  });
+
+  it('does not start the quiz on its own', () => {
+    expect(reducer(initial, setLevel('hard')).hasStarted).toBe(false);
   });
 });
 
@@ -98,13 +109,20 @@ describe('goBack', () => {
 });
 
 describe('restart', () => {
+  const finished = {
+    questionIdx: lastIdx,
+    answers: Array(QUIZ_DATA.length).fill({ isCorrect: true, idx: 0 }),
+    showScore: true,
+    hasStarted: true,
+    level: 'medium',
+  };
+
   it('clears everything back to the beginning', () => {
-    const finished = {
-      questionIdx: lastIdx,
-      answers: Array(QUIZ_DATA.length).fill({ isCorrect: true, idx: 0 }),
-      showScore: true,
-      hasStarted: true,
-    };
     expect(reducer(finished, restart())).toEqual(initial);
+  });
+
+  it('keeps the difficulty the player chose', () => {
+    const onHard = { ...finished, level: 'hard' };
+    expect(reducer(onHard, restart()).level).toBe('hard');
   });
 });

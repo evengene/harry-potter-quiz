@@ -92,9 +92,11 @@ export const QUIZ_DATA = [
 ];
 
 export const COPY = {
-  title: 'Welcome to the Harry Potter Trivia Challenge!',
-  description: 'Embark on a magical journey with our Harry Potter trivia! Are you a true fan? Put your wizarding world knowledge to the test. Grab your wands, and let\'s begin the quiz!',
+  eyebrow: 'Your trial awaits',
+  title: 'Test your wizarding knowledge',
+  description: 'Ten questions stand between you and the title of true fan. Mind the trick answers \u2014 the Marauder\u2019s Map will not help you here.',
   note: '10 questions',
-  start: 'Start',
-  back: '< Back'
+  start: 'Begin',
+  back: '\u2190 Back',
+  answerKeys: ['A', 'B', 'C', 'D'],
 }

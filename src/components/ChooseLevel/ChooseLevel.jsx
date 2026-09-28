@@ -1,52 +1,44 @@
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import { Wrapper } from '../Wrapper';
+import Logo from '../../assets/hp-logo.svg';
+import { quizStart, setLevel } from '../../quizSlice';
+import { ROUTES } from '../../routes/Routes.constants';
+import { COPY, LEVELS } from './ChooseLevel.constants';
 
-import Img from '../../assets/symbol-thin.png';
+const ChooseLevel = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-const onSelectLevel = (level) => () => {
-  switch (level) {
-    case 'easy': {
-      console.log('easy');
-      // navigate(ROUTES.questionEasy);
-      break;
-    }
-    case 'medium': {
-      console.log('medium');
-      break;
-    }
-    case 'hard': {
-      console.log('hard');
-      break;
-    }
-    default: {
-      console.log('default');
-      break;
-    }
-  }
-}
+  const onSelectLevel = (level) => () => {
+    dispatch(setLevel(level));
+    dispatch(quizStart());
+    navigate(ROUTES.questions);
+  };
 
-export const ChooseLevel = () => {
   return (
     <Wrapper>
+      <span className="eyebrow">{COPY.eyebrow}</span>
+      <h1 className="intro-title">{COPY.title}</h1>
+
       <div className="blocks">
-        <div className="block">
-          <img src={Img} className="block-image" alt="" />
-          <button onClick={onSelectLevel('easy')} className="default-btn">
-            Level: Easy
+        {LEVELS.map(({ id, name, note }) => (
+          <button key={id} onClick={onSelectLevel(id)} className="block">
+            <span className="book">
+              <span className="book-spine" />
+              <span className="book-cover">
+                <img src={Logo} className="book-image" alt="" />
+              </span>
+              <span className="book-pages" />
+            </span>
+            <span className="block-name">{name}</span>
+            <span className="block-note">{note}</span>
           </button>
-        </div>
-        <div className="block">
-          <img src={Img} className="block-image" alt="" />
-          <button onClick={onSelectLevel('medium')} className="default-btn">
-            Level: Medium
-          </button>
-        </div>
-        <div className="block">
-          <img src={Img} className="block-image" alt="" />
-          <button onClick={onSelectLevel('hard')} className="default-btn">
-            Level: Hard
-          </button>
-        </div>
+        ))}
       </div>
     </Wrapper>
-  )
-}
+  );
+};
+
+export default ChooseLevel;

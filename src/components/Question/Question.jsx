@@ -56,31 +56,37 @@ const Question = () => {
   return (
     <Wrapper>
       <div className="wrapper">
-        <div className="question-wrapper">
-          <div className="info">
-            Question {index} of {total}
-          </div>
-          <div className="progress-bar">
-            <div className="progress" style={{ width: `${progressValue}%` }} />
-          </div>
-          <h3 className="question" key={questionIdx}>
-            {question?.questionText}
-          </h3>
-        </div>
-        <div key={questionIdx} className={`answer${isShowingFeedback ? ' locked' : ''}`}>
-          {question?.answerOptions.map((answerOption, idx) => (
-            <button
-              key={idx}
-              onClick={handleAnswer(answerOption, idx)}
-              className={`answer-button${
-                selectedIndex === idx
-                  ? feedbackCorrect ? ' correct' : ' incorrect'
-                  : ''
-              }`}
+        <div className="quiz-panel-wrap">
+          <div className="quiz-panel">
+            <div className="info">
+              Question {index} of {total}
+            </div>
+            <div className="progress-bar">
+              <div className="progress" style={{ width: `${progressValue}%` }} />
+            </div>
+            <h3 className="question" key={`q-${questionIdx}`}>
+              {question?.questionText}
+            </h3>
+            <div
+              key={`a-${questionIdx}`}
+              className={`answer${isShowingFeedback ? ' locked' : ''}`}
             >
-              {answerOption.text}
-            </button>
-          ))}
+              {question?.answerOptions.map((answerOption, idx) => (
+                <button
+                  key={idx}
+                  onClick={handleAnswer(answerOption, idx)}
+                  className={`answer-button${
+                    selectedIndex === idx
+                      ? feedbackCorrect ? ' correct' : ' incorrect'
+                      : ''
+                  }`}
+                >
+                  <span className="answer-key">{COPY.answerKeys[idx]}</span>
+                  {answerOption.text}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <button

@@ -18,12 +18,13 @@ const Quiz = () => {
   return (
     <Wrapper>
       <div className="intro">
+        <span className="eyebrow">{COPY.eyebrow}</span>
         <h1 className="intro-title">{COPY.title}</h1>
         <p className="intro-description">{COPY.description}</p>
-        <p className="intro-note">{COPY.note}</p>
         <button onClick={onStartHandler} className="default-btn">
           {COPY.start}
         </button>
+        <p className="intro-note">{COPY.note}</p>
       </div>
     </Wrapper>
   );

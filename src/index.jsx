@@ -9,18 +9,18 @@ import { ROUTES } from './routes/Routes.constants';
 import Question from './components/Question/Question';
 import Quiz from './components/Quiz/Quiz';
 import Result from './components/Result/Result';
+import ChooseLevel from './components/ChooseLevel/ChooseLevel';
 import quizReducer from './quizSlice';
-// import { ChooseLevel } from './components/ChooseLevel/ChooseLevel';
 
 const router = createBrowserRouter([
   {
     path: ROUTES.home,
     element:  <Quiz />,
   },
-  // {
-  //   path: ROUTES.chooseLevel,
-  //   element:  <ChooseLevel />,
-  // },
+  {
+    path: ROUTES.chooseLevel,
+    element: <ChooseLevel />,
+  },
   {
     path: ROUTES.questions,
     element: <Question/>,

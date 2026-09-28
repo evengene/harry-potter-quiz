@@ -7,6 +7,7 @@ const initialState = {
   answers: [],
   showScore: false,
   hasStarted: false, // guards /questions against direct visits and refreshes
+  level: 'medium',
 };
 
 const quizSlice = createSlice({
@@ -15,6 +16,10 @@ const quizSlice = createSlice({
   reducers: {
     quizStart(state) {
       state.hasStarted = true;
+    },
+
+    setLevel(state, action) {
+      state.level = action.payload;
     },
 
     answer(state, action) {
@@ -32,12 +37,12 @@ const quizSlice = createSlice({
       state.questionIdx = Math.max(0, state.questionIdx - 1);
     },
 
-    restart() {
-      return initialState;
+    restart(state) {
+      return { ...initialState, level: state.level };
     },
   },
 });
 
-export const { quizStart, answer, goBack, restart } = quizSlice.actions;
+export const { quizStart, setLevel, answer, goBack, restart } = quizSlice.actions;
 
 export default quizSlice.reducer;
