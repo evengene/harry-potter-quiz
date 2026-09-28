@@ -45,6 +45,7 @@
 
 body {
   min-height: 100vh;
+  min-height: 100svh;
   margin: 0;
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -55,6 +56,7 @@ body {
 
 #root {
   min-height: 100vh;
+  min-height: 100svh;
   background:
     radial-gradient(ellipse 60% 50% at 50% 46%, #16212E 0%, rgba(13, 18, 25, 0.86) 52%, var(--ink) 84%),
     center / cover no-repeat url('./assets/starry-sky.jpg');
@@ -63,6 +65,7 @@ body {
 
 .app {
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
 }
@@ -176,69 +179,109 @@ body {
   pointer-events: none;
 }
 
-/* ------------------------- scrolling hero ------------------------ */
+/* ---------------------------- landing ---------------------------- */
 
-/* A tall stage with a sticky film inside it: the film holds still for
-   three screens while the chapters travel over it. Pure CSS — no scroll
-   listener, no library. */
-.stage {
+.app-landing {
+  --px: 0;
+  --py: 0;
+}
+
+.app-landing .site-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+
+/* Parallax. Each layer gets its own multiplier — bigger means nearer the
+   viewer. These use the `translate` property rather than `transform`, so
+   they compose with the hero's slow drift instead of overwriting it. */
+.app-landing .hero-image {
+  translate: calc(var(--px) * -20px) calc(var(--py) * -14px);
+  transition: translate 320ms var(--ease);
+}
+
+.app-landing .starfield {
+  translate: calc(var(--px) * -7px) calc(var(--py) * -5px);
+  transition: translate 420ms var(--ease);
+}
+
+.app-landing .landing-content {
+  translate: calc(var(--px) * 6px) calc(var(--py) * 4px);
+  transition: translate 260ms var(--ease);
+}
+
+.landing {
   position: relative;
-  flex-shrink: 0;
-  height: 320vh;
-}
-
-.stage-film {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.stage-chapters {
-  position: relative;
-  z-index: 2;
-  margin-top: -100vh; /* lift the copy back over the film */
-}
-
-.stage-chapter {
-  height: 100vh;
+  flex-grow: 1;
+  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0 20px;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+  padding: 96px 20px var(--gap-xl);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-.stage-chapter.is-visible {
-  opacity: 1;
-  transform: none;
+.landing-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+/* Each element arrives on its own beat rather than the block landing at once. */
+.landing-content > * {
+  animation: rise var(--dur-slow) var(--ease) backwards;
+}
+
+.landing-content > *:nth-child(2) { animation-delay: 90ms; }
+.landing-content > *:nth-child(3) { animation-delay: 180ms; }
+.landing-content > *:nth-child(4) { animation-delay: 270ms; }
+.landing-content > *:nth-child(5) { animation-delay: 360ms; }
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(40px, 7vw, 82px);
+  font-size: clamp(38px, 6.4vw, 76px);
   font-weight: 500;
   letter-spacing: 0.1em;
   line-height: 1.12;
   text-transform: uppercase;
-  margin: 26px 0 0;
+  margin: 0 0 var(--gap-md);
+  text-shadow: 0 2px 30px rgba(9, 13, 20, 0.85);
 }
 
-.scroll-cue {
-  display: flex;
-  flex-direction: column;
+.eyebrow {
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 54px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(191, 212, 230, 0.1);
+  border: 1px solid rgba(191, 212, 230, 0.22);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   font-family: var(--font-display);
   font-size: 10px;
   letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--ice);
+  margin-bottom: 26px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--gap-lg);
+}
+
+.hero-actions .outlined-button {
+  margin-top: 0;
 }
 
 /* ------------------------- the pinned film ----------------------- */
@@ -246,49 +289,48 @@ body {
 .hero-scene {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 70% 55% at 50% 72%, #1B2A3A 0%, #101822 42%, var(--ink) 78%);
+  overflow: hidden;
+  background: var(--ink);
 }
 
-.hero-sky {
+/* Starts slightly over-scaled so the slow drift never exposes an edge. */
+.hero-image {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
+  animation: hero-drift 44s ease-in-out infinite alternate;
 }
 
-.hero-castle {
+@keyframes hero-drift {
+  from { transform: scale(1.05) translate3d(0, 0, 0); }
+  to   { transform: scale(1.13) translate3d(0, -1.6%, 0); }
+}
+
+/* Darkens top and bottom so the chapter copy stays readable over the
+   moon and the candle flames. */
+.hero-veil {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 130px;
-  width: 100%;
-  height: 380px;
-}
-
-.hero-candles {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 150px;
-}
-
-.hero-windows rect {
-  opacity: 0.5;
-}
-
-.hero-flame {
-  transform-origin: center bottom;
-  animation: flicker 3.4s ease-in-out infinite alternate;
-}
-
-.hero-flame:nth-of-type(2) { animation-duration: 2.7s; }
-.hero-flame:nth-of-type(3) { animation-duration: 4.1s; }
-
-@keyframes flicker {
-  from { opacity: 0.75; transform: scaleY(0.94); }
-  to   { opacity: 1; transform: scaleY(1.06); }
+  inset: 0;
+  /* Two layers: a pool of shadow under the copy so it never sits on the
+     bright moon, plus a top-and-bottom fade. The old gradient was at its
+     LIGHTEST around 38%, which is exactly where the title sits. */
+  background:
+    radial-gradient(
+      ellipse 62% 56% at 50% 50%,
+      rgba(9, 13, 20, 0.82) 0%,
+      rgba(9, 13, 20, 0.52) 55%,
+      rgba(9, 13, 20, 0) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(9, 13, 20, 0.6) 0%,
+      rgba(9, 13, 20, 0.3) 30%,
+      rgba(9, 13, 20, 0.45) 65%,
+      rgba(9, 13, 20, 0.88) 100%
+    );
 }
 
 /* ----------------------------- intro ----------------------------- */
@@ -299,14 +341,6 @@ body {
   flex-direction: column;
   align-items: center;
   animation: rise var(--dur-slow) var(--ease) backwards;
-}
-
-.eyebrow {
-  font-family: var(--font-display);
-  font-size: 11px;
-  letter-spacing: 0.44em;
-  color: var(--ice);
-  margin-bottom: 26px;
 }
 
 .intro-title {
@@ -329,7 +363,8 @@ body {
   line-height: 1.7;
   width: min(520px, 100%);
   text-align: center;
-  color: #96A6B8;
+  color: #A8B6C6;
+  text-shadow: 0 1px 20px rgba(9, 13, 20, 0.8);
   animation: rise var(--dur-slow) var(--ease) 140ms backwards;
 }
 
@@ -803,12 +838,14 @@ body {
   .mote {
     display: none;
   }
-  .stage-chapter {
-    opacity: 1;
-    transform: none;
-  }
-  .hero-flame {
+  .hero-image {
     animation: none !important;
+    transform: scale(1.05);
+  }
+  .app-landing .hero-image,
+  .app-landing .starfield,
+  .app-landing .landing-content {
+    translate: none !important;
   }
 }
 
@@ -838,10 +875,7 @@ body {
   .quiz-panel {
     padding: 22px 18px 28px;
   }
-  .hero-castle {
-    bottom: 100px;
-    height: 260px;
-  }
+
   .answer-button {
     padding: 16px 26px;
   }
