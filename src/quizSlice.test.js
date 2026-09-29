@@ -5,7 +5,6 @@ import { getQuestions } from './components/Quiz/Quiz.constants';
 
 const initial = reducer(undefined, { type: '@@INIT' });
 const mediumTotal = getQuestions('medium').length;
-const hardTotal = getQuestions('hard').length;
 const lastIdx = mediumTotal - 1;
 
 describe('initial state', () => {
@@ -53,24 +52,15 @@ describe('setLevel', () => {
 });
 
 describe('question sets', () => {
-  it('ends the quiz at the end of the chosen level, not a fixed length', () => {
-    const onLastHard = {
-      ...initial,
-      level: 'hard',
-      questionIdx: hardTotal - 1,
-      hasStarted: true,
-    };
-    expect(reducer(onLastHard, answer({ isCorrect: true, idx: 0 })).showScore).toBe(true);
-  });
+  it('ends at the end of whichever set is chosen', () => {
+    ['easy', 'medium', 'hard'].forEach((level) => {
+      const total = getQuestions(level).length;
+      const onLast = { ...initial, level, questionIdx: total - 1, hasStarted: true };
+      const beforeLast = { ...initial, level, questionIdx: total - 2, hasStarted: true };
 
-  it('does not end early on a longer set at the same index', () => {
-    const sameIdxOnMedium = {
-      ...initial,
-      level: 'medium',
-      questionIdx: hardTotal - 1,
-      hasStarted: true,
-    };
-    expect(reducer(sameIdxOnMedium, answer({ isCorrect: true, idx: 0 })).showScore).toBe(false);
+      expect(reducer(onLast, answer({ isCorrect: true, idx: 0 })).showScore).toBe(true);
+      expect(reducer(beforeLast, answer({ isCorrect: true, idx: 0 })).showScore).toBe(false);
+    });
   });
 
   it('falls back to medium for an unknown level', () => {
