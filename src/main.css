@@ -45,6 +45,7 @@
 
 body {
   min-height: 100vh;
+  min-height: 100svh;
   margin: 0;
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -55,6 +56,7 @@ body {
 
 #root {
   min-height: 100vh;
+  min-height: 100svh;
   background:
     radial-gradient(ellipse 60% 50% at 50% 46%, #16212E 0%, rgba(13, 18, 25, 0.86) 52%, var(--ink) 84%),
     center / cover no-repeat url('./assets/starry-sky.jpg');
@@ -63,6 +65,7 @@ body {
 
 .app {
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
 }
@@ -70,8 +73,12 @@ body {
 /* ------------------------------ nav ------------------------------ */
 
 .site-nav {
-  position: relative;
-  z-index: 1;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: rgba(9, 13, 20, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   gap: var(--gap-md);
@@ -172,6 +179,207 @@ body {
   pointer-events: none;
 }
 
+/* ---------------------------- landing ---------------------------- */
+
+.app-landing .site-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+
+.landing {
+  position: relative;
+  flex-grow: 1;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 96px 20px var(--gap-xl);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.landing-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Each element arrives on its own beat rather than the block landing at once. */
+.landing-content > * {
+  animation: rise var(--dur-slow) var(--ease) backwards;
+}
+
+.landing-content > *:nth-child(2) { animation-delay: 90ms; }
+.landing-content > *:nth-child(3) { animation-delay: 180ms; }
+.landing-content > *:nth-child(4) { animation-delay: 270ms; }
+.landing-content > *:nth-child(5) { animation-delay: 360ms; }
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 6.4vw, 76px);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.12;
+  text-transform: uppercase;
+  margin: 0 0 var(--gap-md);
+  text-shadow: 0 2px 30px rgba(9, 13, 20, 0.85);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(191, 212, 230, 0.1);
+  border: 1px solid rgba(191, 212, 230, 0.22);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--ice);
+  margin-bottom: 26px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--gap-lg);
+}
+
+.hero-actions .outlined-button {
+  margin-top: 0;
+}
+
+/* ------------------------ opening sequence ----------------------- */
+
+/* Black over everything, clearing to reveal the scene. */
+.intro-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  background: var(--ink);
+  pointer-events: none;
+  animation: intro-clear 750ms var(--ease) forwards;
+}
+
+@keyframes intro-clear {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* The camera push. It lives on the scene, not the image, so it composes
+   with the image's own slow drift instead of fighting it for `transform`. */
+.is-intro .hero-scene {
+  animation: hero-push 1700ms var(--ease) backwards;
+}
+
+@keyframes hero-push {
+  from { transform: scale(1.14); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* The sigil traces itself, holds, then leaves. It is a flourish on
+   arrival only — it does not stay on the screen. */
+.landing-sigil {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: min(560px, 86vw);
+  color: var(--ice);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  animation: sigil-hold 2100ms var(--ease) 320ms backwards;
+}
+
+.landing-sigil circle,
+.landing-sigil rect,
+.landing-sigil path {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: sigil-draw 1500ms var(--ease) 320ms forwards;
+}
+
+@keyframes sigil-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes sigil-hold {
+  0%   { opacity: 0; }
+  22%  { opacity: 0.5; }
+  64%  { opacity: 0.5; }
+  100% { opacity: 0; }
+}
+
+/* Content waits for the castle to arrive before it starts. */
+.is-intro .landing-content > *  { animation-delay: 820ms; }
+.is-intro .landing-content > *:nth-child(2) { animation-delay: 980ms; }
+.is-intro .landing-content > *:nth-child(3) { animation-delay: 1140ms; }
+.is-intro .landing-content > *:nth-child(4) { animation-delay: 1300ms; }
+.is-intro .landing-content > *:nth-child(5) { animation-delay: 1460ms; }
+
+/* ------------------------- the pinned film ----------------------- */
+
+.hero-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+/* Starts slightly over-scaled so the slow drift never exposes an edge. */
+.hero-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  animation: hero-drift 44s ease-in-out infinite alternate;
+}
+
+@keyframes hero-drift {
+  from { transform: scale(1.05) translate3d(0, 0, 0); }
+  to   { transform: scale(1.13) translate3d(0, -1.6%, 0); }
+}
+
+/* Darkens top and bottom so the chapter copy stays readable over the
+   moon and the candle flames. */
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  /* Two layers: a pool of shadow under the copy so it never sits on the
+     bright moon, plus a top-and-bottom fade. The old gradient was at its
+     LIGHTEST around 38%, which is exactly where the title sits. */
+  background:
+    radial-gradient(
+      ellipse 62% 56% at 50% 50%,
+      rgba(9, 13, 20, 0.82) 0%,
+      rgba(9, 13, 20, 0.52) 55%,
+      rgba(9, 13, 20, 0) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(9, 13, 20, 0.6) 0%,
+      rgba(9, 13, 20, 0.3) 30%,
+      rgba(9, 13, 20, 0.45) 65%,
+      rgba(9, 13, 20, 0.88) 100%
+    );
+}
+
 /* ----------------------------- intro ----------------------------- */
 
 .intro {
@@ -180,14 +388,6 @@ body {
   flex-direction: column;
   align-items: center;
   animation: rise var(--dur-slow) var(--ease) backwards;
-}
-
-.eyebrow {
-  font-family: var(--font-display);
-  font-size: 11px;
-  letter-spacing: 0.44em;
-  color: var(--ice);
-  margin-bottom: 26px;
 }
 
 .intro-title {
@@ -199,6 +399,7 @@ body {
   text-transform: uppercase;
   width: min(820px, 100%);
   margin: 0;
+  text-align: center;
   animation: rise var(--dur-slow) var(--ease) 60ms backwards;
 }
 
@@ -208,7 +409,9 @@ body {
   font-size: clamp(16px, 2vw, 20px);
   line-height: 1.7;
   width: min(520px, 100%);
-  color: #96A6B8;
+  text-align: center;
+  color: #A8B6C6;
+  text-shadow: 0 1px 20px rgba(9, 13, 20, 0.8);
   animation: rise var(--dur-slow) var(--ease) 140ms backwards;
 }
 
@@ -344,6 +547,10 @@ body {
   clip-path: var(--hex);
   transition: background var(--dur) var(--ease), transform var(--dur-fast) var(--ease),
     opacity var(--dur) var(--ease);
+}
+
+.container > .default-btn {
+  margin-top: var(--gap-xl);
 }
 
 .default-btn:hover:not(:disabled) {
@@ -521,9 +728,10 @@ body {
 }
 
 .book {
+  --spine: 18px;
   position: relative;
   display: block;
-  width: 176px;
+  width: calc(158px + var(--spine));
   height: 236px;
 }
 
@@ -531,7 +739,7 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  width: 18px;
+  width: var(--spine);
   height: 100%;
   background: #253749;
   border-right: 1px solid var(--line);
@@ -539,7 +747,7 @@ body {
 
 .book-cover {
   position: absolute;
-  left: 18px;
+  left: var(--spine);
   top: 0;
   right: 0;
   bottom: 0;
@@ -559,10 +767,10 @@ body {
 
 .book-pages {
   position: absolute;
-  right: -6px;
+  right: calc(var(--spine) * -0.34);
   top: 6px;
   bottom: 6px;
-  width: 6px;
+  width: calc(var(--spine) * 0.34);
   background: repeating-linear-gradient(to bottom, #C9D8E6 0 2px, #93A6B8 2px 4px);
 }
 
@@ -592,7 +800,7 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
   overflow: hidden;
 }
 
@@ -610,7 +818,7 @@ body {
     radial-gradient(1px 1px at 64px 214px, rgba(234, 242, 248, 0.32), transparent),
     radial-gradient(1px 1px at 246px 44px, rgba(234, 242, 248, 0.4), transparent);
   background-size: 280px 280px;
-  animation: twinkle-a 7s ease-in-out infinite alternate, drift 140s linear infinite;
+  animation: twinkle-a 3s ease-in-out infinite alternate, drift 140s linear infinite;
 }
 
 .stars-mid {
@@ -620,7 +828,7 @@ body {
     radial-gradient(1.4px 1.4px at 196px 324px, rgba(234, 242, 248, 0.6), transparent),
     radial-gradient(1.4px 1.4px at 372px 260px, rgba(191, 212, 230, 0.5), transparent);
   background-size: 430px 430px;
-  animation: twinkle-b 11s ease-in-out infinite alternate;
+  animation: twinkle-b 4.5s ease-in-out infinite alternate;
 }
 
 .stars-near {
@@ -629,7 +837,7 @@ body {
     radial-gradient(1.9px 1.9px at 470px 90px, rgba(234, 242, 248, 0.75), transparent),
     radial-gradient(1.9px 1.9px at 280px 486px, rgba(255, 255, 255, 0.7), transparent);
   background-size: 620px 620px;
-  animation: twinkle-c 5s ease-in-out infinite alternate;
+  animation: twinkle-c 2.6s ease-in-out infinite alternate;
 }
 
 /* Motes drift up and across, fading in and out at the edges so they
@@ -649,8 +857,8 @@ body {
 
 @keyframes float-up {
   0%   { transform: translate3d(0, 0, 0); opacity: 0; }
-  10%  { opacity: 0.75; }
-  80%  { opacity: 0.45; }
+  10%  { opacity: 0.9; }
+  80%  { opacity: 0.55; }
   100% { transform: translate3d(var(--drift), -102vh, 0); opacity: 0; }
 }
 
@@ -682,6 +890,10 @@ body {
   .mote {
     display: none;
   }
+  .hero-image {
+    animation: none !important;
+    transform: scale(1.05);
+  }
 }
 
 /* --------------------------- responsive -------------------------- */
@@ -710,6 +922,7 @@ body {
   .quiz-panel {
     padding: 22px 18px 28px;
   }
+
   .answer-button {
     padding: 16px 26px;
   }
@@ -717,7 +930,7 @@ body {
     gap: 34px;
   }
   .book {
-    width: 132px;
+    width: calc(114px + var(--spine));
     height: 178px;
   }
   .book-image {

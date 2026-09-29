@@ -23,9 +23,9 @@ const ChooseLevel = () => {
       <h1 className="intro-title">{COPY.title}</h1>
 
       <div className="blocks">
-        {LEVELS.map(({ id, name, note }) => (
+        {LEVELS.map(({ id, name, note, spine }) => (
           <button key={id} onClick={onSelectLevel(id)} className="block">
-            <span className="book">
+            <span className="book" style={{ '--spine': `${spine}px` }}>
               <span className="book-spine" />
               <span className="book-cover">
                 <img src={Logo} className="book-image" alt="" />
