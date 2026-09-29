@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { COPY } from './Quiz.constants';
 import { Nav } from '../Nav';
 import { Hero } from '../Hero';
+import { Sigil } from '../Sigil';
 import { Starfield } from '../Starfield';
 import { quizStart } from '../../quizSlice';
 import { ROUTES } from '../../routes/Routes.constants';
@@ -12,46 +13,34 @@ import { ROUTES } from '../../routes/Routes.constants';
 const Quiz = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const rootRef = useRef(null);
+
+  // The opening plays once per session — a moment on arrival, not a toll
+  // paid on every replay. Anyone asking for less motion never sees it.
+  const [playIntro] = useState(() => {
+    try {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+      if (sessionStorage.getItem('introPlayed')) return false;
+      sessionStorage.setItem('introPlayed', '1');
+      return true;
+    } catch {
+      return false;
+    }
+  });
 
   const onStartHandler = () => {
     dispatch(quizStart());
     navigate(ROUTES.questions);
   };
 
-  // Parallax: one listener writes the pointer position to two custom
-  // properties and CSS moves each layer by its own multiplier. Keeping the
-  // maths in CSS means the transforms stay on the compositor.
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return undefined;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-
-    let frame = 0;
-    const onMove = (event) => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const x = (event.clientX / window.innerWidth) * 2 - 1;
-        const y = (event.clientY / window.innerHeight) * 2 - 1;
-        root.style.setProperty('--px', x.toFixed(3));
-        root.style.setProperty('--py', y.toFixed(3));
-      });
-    };
-
-    window.addEventListener('pointermove', onMove);
-    return () => {
-      window.removeEventListener('pointermove', onMove);
-      cancelAnimationFrame(frame);
-    };
-  }, []);
-
   return (
-    <div className="app app-landing" ref={rootRef}>
+    <div className={`app app-landing${playIntro ? ' is-intro' : ''}`}>
       <Starfield />
       <Nav />
 
       <main className="landing">
         <Hero />
+        {playIntro && <Sigil className="landing-sigil" />}
+        {playIntro && <div className="intro-veil" />}
 
         <div className="landing-content">
           <span className="eyebrow">{COPY.school}</span>

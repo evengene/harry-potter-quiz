@@ -5,20 +5,23 @@
  * stays on the compositor — and it stops under prefers-reduced-motion.
  */
 
-// left, size in px, seconds to cross the screen, start delay, sideways drift
+// left, size in px, seconds to cross, start offset, sideways drift.
+// The offsets are NEGATIVE on purpose: a negative animation-delay starts
+// the mote partway through its flight, so on arrival they are already
+// spread up the screen instead of all queued at the bottom edge.
 const MOTES = [
-  ['6%', 3, 38, 0, '22px'],
-  ['14%', 2, 52, 9, '-18px'],
-  ['23%', 4, 44, 21, '30px'],
-  ['31%', 2, 60, 5, '-26px'],
-  ['42%', 3, 41, 15, '16px'],
-  ['50%', 2, 55, 27, '-20px'],
-  ['58%', 4, 47, 3, '24px'],
-  ['67%', 2, 63, 18, '-14px'],
-  ['75%', 3, 40, 11, '28px'],
-  ['83%', 2, 57, 24, '-22px'],
-  ['91%', 4, 49, 7, '18px'],
-  ['97%', 2, 66, 31, '-16px'],
+  ['6%', 3, 22, -2, '22px'],
+  ['14%', 2, 28, -14, '-18px'],
+  ['23%', 4, 19, -7, '30px'],
+  ['31%', 2, 30, -22, '-26px'],
+  ['42%', 3, 24, -11, '16px'],
+  ['50%', 2, 26, -4, '-20px'],
+  ['58%', 4, 20, -16, '24px'],
+  ['67%', 2, 29, -9, '-14px'],
+  ['75%', 3, 18, -13, '28px'],
+  ['83%', 2, 27, -20, '-22px'],
+  ['91%', 4, 21, -6, '18px'],
+  ['97%', 2, 25, -17, '-16px'],
 ];
 
 export const Starfield = () => (

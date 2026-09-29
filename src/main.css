@@ -181,33 +181,10 @@ body {
 
 /* ---------------------------- landing ---------------------------- */
 
-.app-landing {
-  --px: 0;
-  --py: 0;
-}
-
 .app-landing .site-nav {
   position: fixed;
   left: 0;
   right: 0;
-}
-
-/* Parallax. Each layer gets its own multiplier — bigger means nearer the
-   viewer. These use the `translate` property rather than `transform`, so
-   they compose with the hero's slow drift instead of overwriting it. */
-.app-landing .hero-image {
-  translate: calc(var(--px) * -20px) calc(var(--py) * -14px);
-  transition: translate 320ms var(--ease);
-}
-
-.app-landing .starfield {
-  translate: calc(var(--px) * -7px) calc(var(--py) * -5px);
-  transition: translate 420ms var(--ease);
-}
-
-.app-landing .landing-content {
-  translate: calc(var(--px) * 6px) calc(var(--py) * 4px);
-  transition: translate 260ms var(--ease);
 }
 
 .landing {
@@ -227,7 +204,7 @@ body {
 
 .landing-content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -284,11 +261,81 @@ body {
   margin-top: 0;
 }
 
+/* ------------------------ opening sequence ----------------------- */
+
+/* Black over everything, clearing to reveal the scene. */
+.intro-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  background: var(--ink);
+  pointer-events: none;
+  animation: intro-clear 750ms var(--ease) forwards;
+}
+
+@keyframes intro-clear {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* The camera push. It lives on the scene, not the image, so it composes
+   with the image's own slow drift instead of fighting it for `transform`. */
+.is-intro .hero-scene {
+  animation: hero-push 1700ms var(--ease) backwards;
+}
+
+@keyframes hero-push {
+  from { transform: scale(1.14); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* The sigil traces itself, holds, then leaves. It is a flourish on
+   arrival only — it does not stay on the screen. */
+.landing-sigil {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: min(560px, 86vw);
+  color: var(--ice);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  animation: sigil-hold 2100ms var(--ease) 320ms backwards;
+}
+
+.landing-sigil circle,
+.landing-sigil rect,
+.landing-sigil path {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: sigil-draw 1500ms var(--ease) 320ms forwards;
+}
+
+@keyframes sigil-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes sigil-hold {
+  0%   { opacity: 0; }
+  22%  { opacity: 0.5; }
+  64%  { opacity: 0.5; }
+  100% { opacity: 0; }
+}
+
+/* Content waits for the castle to arrive before it starts. */
+.is-intro .landing-content > *  { animation-delay: 820ms; }
+.is-intro .landing-content > *:nth-child(2) { animation-delay: 980ms; }
+.is-intro .landing-content > *:nth-child(3) { animation-delay: 1140ms; }
+.is-intro .landing-content > *:nth-child(4) { animation-delay: 1300ms; }
+.is-intro .landing-content > *:nth-child(5) { animation-delay: 1460ms; }
+
 /* ------------------------- the pinned film ----------------------- */
 
 .hero-scene {
   position: absolute;
   inset: 0;
+  z-index: 0;
   overflow: hidden;
   background: var(--ink);
 }
@@ -748,7 +795,7 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
   overflow: hidden;
 }
 
@@ -766,7 +813,7 @@ body {
     radial-gradient(1px 1px at 64px 214px, rgba(234, 242, 248, 0.32), transparent),
     radial-gradient(1px 1px at 246px 44px, rgba(234, 242, 248, 0.4), transparent);
   background-size: 280px 280px;
-  animation: twinkle-a 7s ease-in-out infinite alternate, drift 140s linear infinite;
+  animation: twinkle-a 3s ease-in-out infinite alternate, drift 140s linear infinite;
 }
 
 .stars-mid {
@@ -776,7 +823,7 @@ body {
     radial-gradient(1.4px 1.4px at 196px 324px, rgba(234, 242, 248, 0.6), transparent),
     radial-gradient(1.4px 1.4px at 372px 260px, rgba(191, 212, 230, 0.5), transparent);
   background-size: 430px 430px;
-  animation: twinkle-b 11s ease-in-out infinite alternate;
+  animation: twinkle-b 4.5s ease-in-out infinite alternate;
 }
 
 .stars-near {
@@ -785,7 +832,7 @@ body {
     radial-gradient(1.9px 1.9px at 470px 90px, rgba(234, 242, 248, 0.75), transparent),
     radial-gradient(1.9px 1.9px at 280px 486px, rgba(255, 255, 255, 0.7), transparent);
   background-size: 620px 620px;
-  animation: twinkle-c 5s ease-in-out infinite alternate;
+  animation: twinkle-c 2.6s ease-in-out infinite alternate;
 }
 
 /* Motes drift up and across, fading in and out at the edges so they
@@ -805,8 +852,8 @@ body {
 
 @keyframes float-up {
   0%   { transform: translate3d(0, 0, 0); opacity: 0; }
-  10%  { opacity: 0.75; }
-  80%  { opacity: 0.45; }
+  10%  { opacity: 0.9; }
+  80%  { opacity: 0.55; }
   100% { transform: translate3d(var(--drift), -102vh, 0); opacity: 0; }
 }
 
@@ -841,11 +888,6 @@ body {
   .hero-image {
     animation: none !important;
     transform: scale(1.05);
-  }
-  .app-landing .hero-image,
-  .app-landing .starfield,
-  .app-landing .landing-content {
-    translate: none !important;
   }
 }
 
