@@ -724,9 +724,10 @@ body {
 }
 
 .book {
+  --spine: 18px;
   position: relative;
   display: block;
-  width: 176px;
+  width: calc(158px + var(--spine));
   height: 236px;
 }
 
@@ -734,7 +735,7 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  width: 18px;
+  width: var(--spine);
   height: 100%;
   background: #253749;
   border-right: 1px solid var(--line);
@@ -742,7 +743,7 @@ body {
 
 .book-cover {
   position: absolute;
-  left: 18px;
+  left: var(--spine);
   top: 0;
   right: 0;
   bottom: 0;
@@ -762,10 +763,10 @@ body {
 
 .book-pages {
   position: absolute;
-  right: -6px;
+  right: calc(var(--spine) * -0.34);
   top: 6px;
   bottom: 6px;
-  width: 6px;
+  width: calc(var(--spine) * 0.34);
   background: repeating-linear-gradient(to bottom, #C9D8E6 0 2px, #93A6B8 2px 4px);
 }
 
@@ -925,7 +926,7 @@ body {
     gap: 34px;
   }
   .book {
-    width: 132px;
+    width: calc(114px + var(--spine));
     height: 178px;
   }
   .book-image {

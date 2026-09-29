@@ -3,8 +3,9 @@ export const COPY = {
   title: 'Three levels',
 }
 
+// `spine` is the book's thickness in px — harder level, heavier volume.
 export const LEVELS = [
-  { id: 'easy', name: 'Easy', note: 'First years welcome' },
-  { id: 'medium', name: 'Medium', note: 'For the well read' },
-  { id: 'hard', name: 'Hard', note: 'Restricted section' },
+  { id: 'easy', name: 'Easy', note: 'First years welcome', spine: 10 },
+  { id: 'medium', name: 'Medium', note: 'For the well read', spine: 22 },
+  { id: 'hard', name: 'Hard', note: 'Restricted section', spine: 38 },
 ]
