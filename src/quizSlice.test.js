@@ -1,10 +1,12 @@
 import { describe, it, expect } from 'vitest';
 
 import reducer, { answer, goBack, quizStart, restart, setLevel } from './quizSlice';
-import { QUIZ_DATA } from './components/Quiz/Quiz.constants';
+import { getQuestions } from './components/Quiz/Quiz.constants';
 
 const initial = reducer(undefined, { type: '@@INIT' });
-const lastIdx = QUIZ_DATA.length - 1;
+const mediumTotal = getQuestions('medium').length;
+const hardTotal = getQuestions('hard').length;
+const lastIdx = mediumTotal - 1;
 
 describe('initial state', () => {
   it('starts on the first question with nothing answered', () => {
@@ -35,6 +37,54 @@ describe('setLevel', () => {
 
   it('does not start the quiz on its own', () => {
     expect(reducer(initial, setLevel('hard')).hasStarted).toBe(false);
+  });
+
+  it('clears a finished run', () => {
+    const finished = {
+      questionIdx: lastIdx,
+      answers: Array(mediumTotal).fill({ isCorrect: true, idx: 0 }),
+      showScore: true,
+      hasStarted: true,
+      level: 'medium',
+    };
+    const next = reducer(finished, setLevel('hard'));
+    expect(next).toEqual({ ...initial, level: 'hard' });
+  });
+});
+
+describe('question sets', () => {
+  it('ends the quiz at the end of the chosen level, not a fixed length', () => {
+    const onLastHard = {
+      ...initial,
+      level: 'hard',
+      questionIdx: hardTotal - 1,
+      hasStarted: true,
+    };
+    expect(reducer(onLastHard, answer({ isCorrect: true, idx: 0 })).showScore).toBe(true);
+  });
+
+  it('does not end early on a longer set at the same index', () => {
+    const sameIdxOnMedium = {
+      ...initial,
+      level: 'medium',
+      questionIdx: hardTotal - 1,
+      hasStarted: true,
+    };
+    expect(reducer(sameIdxOnMedium, answer({ isCorrect: true, idx: 0 })).showScore).toBe(false);
+  });
+
+  it('falls back to medium for an unknown level', () => {
+    expect(getQuestions('nonsense')).toBe(getQuestions('medium'));
+  });
+
+  it('gives every question exactly one correct answer and four options', () => {
+    ['easy', 'medium', 'hard'].forEach((level) => {
+      getQuestions(level).forEach((q) => {
+        expect(q.answerOptions).toHaveLength(4);
+        expect(q.answerOptions.filter((o) => o.isCorrect)).toHaveLength(1);
+        expect(q.questionText.length).toBeGreaterThan(0);
+      });
+    });
   });
 });
 
@@ -111,7 +161,7 @@ describe('goBack', () => {
 describe('restart', () => {
   const finished = {
     questionIdx: lastIdx,
-    answers: Array(QUIZ_DATA.length).fill({ isCorrect: true, idx: 0 }),
+    answers: Array(mediumTotal).fill({ isCorrect: true, idx: 0 }),
     showScore: true,
     hasStarted: true,
     level: 'medium',

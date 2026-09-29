@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Wrapper } from '../Wrapper';
 import { answer, goBack } from '../../quizSlice';
-import { COPY, QUIZ_DATA as quiz } from '../Quiz/Quiz.constants';
+import { COPY, getQuestions } from '../Quiz/Quiz.constants';
 import { ROUTES } from '../../routes/Routes.constants';
 
 const FEEDBACK_MS = 600;
@@ -14,6 +14,8 @@ const Question = () => {
   const questionIdx = useSelector((state) => state.quiz.questionIdx);
   const showScore = useSelector((state) => state.quiz.showScore);
   const hasStarted = useSelector((state) => state.quiz.hasStarted);
+  const level = useSelector((state) => state.quiz.level);
+  const quiz = getQuestions(level);
   const navigate = useNavigate();
   const question = quiz[questionIdx];
   const index = questionIdx + 1;

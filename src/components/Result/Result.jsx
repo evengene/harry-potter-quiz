@@ -6,7 +6,7 @@ import { getScore, getMessageBasedOnScore } from "./Result.utils";
 import { COPY } from './Result.constants';
 import { Wrapper } from '../Wrapper';
 import { Sigil } from '../Sigil';
-import { QUIZ_DATA } from '../Quiz/Quiz.constants';
+import { getQuestions } from '../Quiz/Quiz.constants';
 
 import { restart } from '../../quizSlice';
 import { ROUTES } from '../../routes/Routes.constants';
@@ -15,10 +15,11 @@ const Result = () => {
   const dispatch = useDispatch();
   const answers = useSelector((state) => state.quiz.answers);
   const showScore = useSelector((state) => state.quiz.showScore);
+  const level = useSelector((state) => state.quiz.level);
   const navigate = useNavigate();
 
   const score = getScore(answers);
-  const totalQuestions = QUIZ_DATA.length;
+  const totalQuestions = getQuestions(level).length;
 
   useEffect(() => {
     if (!showScore) {

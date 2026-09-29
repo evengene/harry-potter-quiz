@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { QUIZ_DATA } from './components/Quiz/Quiz.constants';
+import { getQuestions } from './components/Quiz/Quiz.constants';
 
 const initialState = {
   questionIdx: 0,
@@ -19,14 +19,14 @@ const quizSlice = createSlice({
     },
 
     setLevel(state, action) {
-      state.level = action.payload;
+      return { ...initialState, level: action.payload };
     },
 
     answer(state, action) {
       const { isCorrect, idx } = action.payload;
       state.answers[state.questionIdx] = { isCorrect, idx };
 
-      if (state.questionIdx + 1 >= QUIZ_DATA.length) {
+      if (state.questionIdx + 1 >= getQuestions(state.level).length) {
         state.showScore = true;
       } else {
         state.questionIdx += 1;
