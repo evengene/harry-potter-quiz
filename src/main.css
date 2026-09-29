@@ -549,6 +549,10 @@ body {
     opacity var(--dur) var(--ease);
 }
 
+.container > .default-btn {
+  margin-top: var(--gap-xl);
+}
+
 .default-btn:hover:not(:disabled) {
   background: #fff;
   transform: scale(1.02);
