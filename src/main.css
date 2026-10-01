@@ -720,6 +720,20 @@ body {
   animation: rise var(--dur) var(--ease) backwards;
 }
 
+.quiz-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.4vw, 40px);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--starlight);
+  width: min(820px, 100%);
+  margin: 0 0 var(--gap-lg);
+  text-align: center;
+  animation: rise var(--dur-slow) var(--ease) 60ms backwards;
+}
+
 .info {
   display: flex;
   align-items: center;
@@ -1063,7 +1077,7 @@ body {
 }
 
 .castle-pin-portrait {
-  --sheet-h: 52svh;
+  --sheet-h: 46svh;
   display: block;
   background: var(--ink);
 }
@@ -1169,7 +1183,8 @@ body {
 .castle-pin-portrait .castle-intro {
   inset: 0;
   transform: none;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-bottom: 7svh;
   z-index: 4;
 }
 
@@ -1190,12 +1205,12 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  top: -16svh;
+  top: -6svh;
   background: linear-gradient(
     to bottom,
     rgba(9, 13, 20, 0) 0%,
-    rgba(9, 13, 20, 0.74) 44%,
-    var(--ink) 100%
+    rgba(9, 13, 20, 0.6) 38%,
+    var(--ink) 72%
   );
   pointer-events: none;
 }
@@ -1206,7 +1221,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* Sat on the bottom edge instead of centred in the sheet: the block then
+     grows upward as a blurb runs long, so it covers only as much of the
+     drawing as its own height, and a tall phone shows the castle whole. */
+  justify-content: flex-end;
   gap: 6px;
   padding: 14px 20px 26px;
   text-align: center;
@@ -1259,7 +1277,7 @@ body {
 }
 
 .sheet-card .guide-title {
-  font-size: clamp(22px, 6.5vw, 32px);
+  font-size: clamp(20px, 5.6vw, 30px);
 }
 
 .sheet-card .guide-blurb {
@@ -1269,6 +1287,38 @@ body {
 }
 
 /* --------------------------- answer review ------------------------- */
+
+/* Both actions on one line. Each button keeps its own top margin for the
+   screens that use it alone, so they are cleared here. Under 600px the
+   buttons go full width, which wraps them back into a stack by itself. */
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: var(--gap-xl);
+}
+
+.result-actions .default-btn,
+.result-actions .outlined-button {
+  margin-top: 0;
+}
+
+.review-toggle {
+  gap: 10px;
+}
+
+.review-chevron {
+  flex: none;
+  width: 12px;
+  height: 8px;
+  transition: transform var(--dur) var(--ease);
+}
+
+.review-toggle[aria-expanded='true'] .review-chevron {
+  transform: rotate(180deg);
+}
 .review {
   list-style: none;
   margin: var(--gap-lg) 0 0;

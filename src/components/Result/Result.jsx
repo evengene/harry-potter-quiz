@@ -50,18 +50,35 @@ const Result = () => {
         {getMessageBasedOnScore(score, totalQuestions)}
       </p>
 
-      <button onClick={restartClickHandler} className="default-btn">
-        {COPY.restart}
-      </button>
+      <div className="result-actions">
+        <button onClick={restartClickHandler} className="default-btn">
+          {COPY.restart}
+        </button>
 
-      <button
-        onClick={() => setShowReview((open) => !open)}
-        className="default-btn outlined-button"
-        aria-expanded={showReview}
-        aria-controls="review-list"
-      >
-        {showReview ? COPY.reviewHide : COPY.review}
-      </button>
+        <button
+          onClick={() => setShowReview((open) => !open)}
+          className="default-btn outlined-button review-toggle"
+          aria-expanded={showReview}
+          aria-controls="review-list"
+        >
+          {showReview ? COPY.reviewHide : COPY.review}
+          <svg
+            className="review-chevron"
+            viewBox="0 0 12 8"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M1 1.75 6 6.25 11 1.75"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
 
       {showReview && (
         <ol className="review" id="review-list">

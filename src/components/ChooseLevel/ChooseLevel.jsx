@@ -215,11 +215,13 @@ const ChooseLevel = () => {
             {intro}
 
             <div className="castle-stack">
-              {LEVELS.map(({ id, name, blurb, spine }, i) => (
+              {LEVELS.map(({ id, name, place, blurb, spine }, i) => (
                 <article className="sheet-card" data-i={i} key={id}>
                   <Book spine={spine} />
-                  <span className="eyebrow">{COPY.chapterEyebrow}</span>
-                  <h2 className="guide-title">{name}</h2>
+                  <span className="eyebrow">
+                    {COPY.chapterEyebrow} {i + 1} — {name}
+                  </span>
+                  <h2 className="guide-title">{place}</h2>
                   <p className="guide-blurb">{blurb}</p>
                   <button onClick={onSelectLevel(id)} className="default-btn">
                     {COPY.begin}
@@ -247,7 +249,7 @@ const ChooseLevel = () => {
 
           {intro}
 
-          {LEVELS.map(({ id, name, blurb, anchor, side, labelDrop }, i) => (
+          {LEVELS.map(({ id, name, place, blurb, anchor, side, labelDrop }, i) => (
             <div
               className="guide"
               data-i={i}
@@ -263,8 +265,10 @@ const ChooseLevel = () => {
               <div className="guide-arm">
                 <span className="guide-line" />
                 <div className="guide-text">
-                  <span className="eyebrow">{COPY.chapterEyebrow}</span>
-                  <h2 className="guide-title">{name}</h2>
+                  <span className="eyebrow">
+                    {COPY.chapterEyebrow} {i + 1} — {name}
+                  </span>
+                  <h2 className="guide-title">{place}</h2>
                   <p className="guide-blurb">{blurb}</p>
                   <button onClick={onSelectLevel(id)} className="default-btn">
                     {COPY.begin}

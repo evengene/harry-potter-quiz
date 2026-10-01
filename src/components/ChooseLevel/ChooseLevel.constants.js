@@ -1,7 +1,7 @@
 export const COPY = {
   eyebrow: 'Three levels',
   title: 'Choose your trial',
-  cue: 'Scroll to ascend',
+  cue: 'Scroll to explore',
   chapterEyebrow: 'Level',
   begin: 'Begin',
 }
@@ -42,38 +42,47 @@ export const LEVELS = [
     mobileAnchor: { x: 23, y: 49 },
     labelDrop: 0,
     name: 'Easy',
+    place: 'Great Hall',
     note: 'First years welcome',
     spine: 10,
     zoom: 1.55,
     anchor: { x: 38, y: 49 },
     side: 'right',
     region: { x1: 35, y1: 38, x2: 43, y2: 53 },
-    blurb: 'The great hall, lit for supper. Where every student starts, and where the portraits still give you a hint if you ask nicely.',
+    blurb: 'Welcome to the Great Hall - the heart of Hogwarts and the perfect place to start',
   },
   {
     id: 'medium',
     mobileAnchor: { x: 77, y: 55 },
     labelDrop: 0,
     name: 'Medium',
+    place: 'East Tower',
     note: 'For the well read',
     spine: 22,
     zoom: 2.05,
     anchor: { x: 63, y: 54 },
     side: 'left',
     region: { x1: 61, y1: 49, x2: 65, y2: 59 },
-    blurb: 'The east tower, where the working lessons happen. Seven years of them, and by now all of it is fair game.',
+    blurb: 'The East Tower rewards those who have done their homework.',
   },
   {
     id: 'hard',
     mobileAnchor: { x: 41, y: 31 },
     labelDrop: 14,
     name: 'Hard',
+    place: 'Headmaster\u2019s Tower',
     note: 'Restricted section',
     spine: 38,
     zoom: 2.7,
     anchor: { x: 45, y: 26 },
     side: 'left',
     region: { x1: 41, y1: 21, x2: 49, y2: 33 },
-    blurb: 'The highest tower in the castle. Nobody climbs this far by accident, and the books on these shelves are not the ones on the syllabus.',
+    blurb: 'The Headmaster’s Tower is reserved for those who know Hogwarts inside and out.',
   },
 ]
+
+export const getLevel = (id) => {
+  const index = LEVELS.findIndex((level) => level.id === id);
+  const found = index >= 0 ? index : 0;
+  return { ...LEVELS[found], number: found + 1 };
+};

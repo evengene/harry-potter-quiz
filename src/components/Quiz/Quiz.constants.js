@@ -282,11 +282,11 @@ export const QUIZ_DATA = { easy, medium, hard };
 export const getQuestions = (level) => QUIZ_DATA[level] ?? QUIZ_DATA.medium;
 
 export const COPY = {
-  school: 'Hogwarts School of Witchcraft and Wizardry',
+  school: 'Welcome to Hogwarts',
   heroTitle: 'The Trivia Trials',
   eyebrow: 'Your trial awaits',
   title: 'Test your wizarding knowledge',
-  description: 'Ten questions stand between you and the title of true fan. Mind the trick answers \u2014 the Marauder\u2019s Map will not help you here.',
+  description: 'Prove yourself a true Harry Potter fan. Three trials, ten questions each \u2014 and no, the Marauder\u2019s Map will not help you here.',
   note: '10 questions',
   ready: 'When you are ready',
   chooseLevel: 'Choose level',

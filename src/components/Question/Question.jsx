@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Wrapper } from '../Wrapper';
 import { answer, goBack, restart } from '../../quizSlice';
 import { COPY, getQuestions } from '../Quiz/Quiz.constants';
+import { COPY as LEVEL_COPY, getLevel } from '../ChooseLevel/ChooseLevel.constants';
 import { ROUTES } from '../../routes/Routes.constants';
 
 const FEEDBACK_MS = 600;
@@ -16,6 +17,7 @@ const Question = () => {
   const hasStarted = useSelector((state) => state.quiz.hasStarted);
   const level = useSelector((state) => state.quiz.level);
   const quiz = getQuestions(level);
+  const { name, place, number } = getLevel(level);
   const navigate = useNavigate();
   const question = quiz[questionIdx];
   const index = questionIdx + 1;
@@ -65,6 +67,11 @@ const Question = () => {
   return (
     <Wrapper>
       <div className="wrapper">
+        <span className="eyebrow">
+          {LEVEL_COPY.chapterEyebrow} {number} — {name}
+        </span>
+        <h1 className="quiz-title">{place}</h1>
+
         <div className="quiz-panel-wrap">
           <div className="quiz-panel">
             <div className="info">
