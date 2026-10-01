@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Wrapper } from '../Wrapper';
-import { answer, goBack } from '../../quizSlice';
+import { answer, goBack, restart } from '../../quizSlice';
 import { COPY, getQuestions } from '../Quiz/Quiz.constants';
 import { ROUTES } from '../../routes/Routes.constants';
 
@@ -44,7 +44,14 @@ const Question = () => {
   const onBackHandler = () => {
     if (questionIdx > 0) {
       dispatch(goBack());
-    } else navigate(ROUTES.home);
+      return;
+    }
+    // Backing out of the first question ends the run rather than leaving it
+    // open. Without this hasStarted stays true, so the nav goes on reporting
+    // "in progress" and holding the level link shut while you are standing
+    // on the level select.
+    dispatch(restart());
+    navigate(ROUTES.home);
   };
 
   useEffect(() => {

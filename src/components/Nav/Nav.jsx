@@ -14,6 +14,8 @@ export const Nav = () => {
   const linkClass = (to) =>
     `site-nav-link${pathname === to ? ' is-current' : ''}`;
 
+  const playTo = isPlaying ? ROUTES.questions : ROUTES.home;
+
   return (
     <nav className="site-nav">
       <Link to={ROUTES.home} className="site-nav-logo">
@@ -21,7 +23,7 @@ export const Nav = () => {
       </Link>
 
       <div className="site-nav-links">
-        <Link to={ROUTES.home} className={linkClass(ROUTES.home)}>
+        <Link to={playTo} className={linkClass(playTo)}>
           {COPY.play}
         </Link>
 
