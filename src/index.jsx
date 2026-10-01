@@ -9,6 +9,7 @@ import { ROUTES } from './routes/Routes.constants';
 import Question from './components/Question/Question';
 import Result from './components/Result/Result';
 import ChooseLevel from './components/ChooseLevel/ChooseLevel';
+import LevelPicker from './components/LevelPicker/LevelPicker';
 import quizReducer from './quizSlice';
 
 const router = createBrowserRouter([
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
   },
   {
     path: ROUTES.chooseLevel,
-    element: <ChooseLevel />,
+    element: <LevelPicker />,
   },
   {
     path: ROUTES.questions,

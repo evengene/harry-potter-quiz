@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Wrapper } from '../Wrapper';
 import { Nav } from '../Nav';
 import { Starfield } from '../Starfield';
 import { CastleStage } from '../CastleStage';
-import mobileScene from '../../assets/artwork/mobile.jpg';
 import { Book } from '../Book';
+import LevelPicker from '../LevelPicker/LevelPicker';
+import mobileScene from '../../assets/artwork/mobile.jpg';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { quizStart, setLevel } from '../../quizSlice';
 import { ROUTES } from '../../routes/Routes.constants';
@@ -134,24 +134,7 @@ const ChooseLevel = () => {
     };
   }, [reduced, wide]);
 
-  // Anyone asking for less motion gets the plain list instead of a journey.
-  if (reduced) {
-    return (
-      <Wrapper>
-        <span className="eyebrow">{COPY.eyebrow}</span>
-        <h1 className="intro-title">{COPY.title}</h1>
-        <div className="blocks">
-          {LEVELS.map(({ id, name, note, spine }) => (
-            <button key={id} onClick={onSelectLevel(id)} className="block">
-              <Book spine={spine} />
-              <span className="block-name">{name}</span>
-              <span className="block-note">{note}</span>
-            </button>
-          ))}
-        </div>
-      </Wrapper>
-    );
-  }
+  if (reduced) return <LevelPicker />;
 
   const intro = (
     <div className="castle-intro">

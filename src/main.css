@@ -968,12 +968,21 @@ body {
 
 /* --------------------------- levels ------------------------------ */
 
+.page-eyebrow {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
 .blocks {
   display: flex;
   justify-content: center;
   align-items: flex-end;
   flex-wrap: wrap;
-  gap: 64px;
+  gap: clamp(28px, 5vw, 72px);
   margin: var(--gap-xl) 0 0;
 }
 
@@ -981,7 +990,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 8px;
   background: none;
   border: none;
   padding: 0;
@@ -1001,6 +1010,13 @@ body {
   --book-h: 236px;
   --spine-ratio: 0.076;
   --spine: calc(var(--book-h) * var(--spine-ratio));
+  --inlay: calc(var(--book-h) * 0.051);
+  --ring: radial-gradient(
+    circle at center,
+    transparent 0 3.2px,
+    var(--line-strong) 3.2px 4.2px,
+    transparent 4.2px
+  );
   position: relative;
   display: block;
   width: calc(var(--book-h) * 0.669 + var(--spine));
@@ -1023,7 +1039,15 @@ body {
   top: 0;
   right: 0;
   bottom: 0;
-  background: var(--panel-solid);
+  background-color: var(--panel-solid);
+  background-image: var(--ring), var(--ring), var(--ring), var(--ring);
+  background-repeat: no-repeat;
+  background-size: 11px 11px;
+  background-position:
+    left calc(var(--inlay) - 5.5px) top calc(var(--inlay) - 5.5px),
+    right calc(var(--inlay) - 5.5px) top calc(var(--inlay) - 5.5px),
+    left calc(var(--inlay) - 5.5px) bottom calc(var(--inlay) - 5.5px),
+    right calc(var(--inlay) - 5.5px) bottom calc(var(--inlay) - 5.5px);
   border: 1px solid var(--line-strong);
   display: flex;
   align-items: center;
@@ -1033,7 +1057,7 @@ body {
 .book-cover:before {
   content: "";
   position: absolute;
-  inset: calc(var(--book-h) * 0.051);
+  inset: var(--inlay);
   border: 1px solid var(--line);
 }
 
@@ -1053,10 +1077,28 @@ body {
   opacity: 0.85;
 }
 
+.block .book {
+  --book-h: clamp(168px, 22vw, 292px);
+  margin-bottom: 14px;
+}
+
+.block:nth-child(2) .book {
+  --book-h: clamp(198px, 27vw, 356px);
+}
+
+.block-level {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted-dim);
+}
+
 .block-name {
   font-family: var(--font-display);
-  font-size: 15px;
-  letter-spacing: 0.26em;
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   color: var(--starlight);
 }
 
@@ -1565,6 +1607,11 @@ body {
   }
   .book {
     --book-h: 178px;
+  }
+
+  .block .book,
+  .block:nth-child(2) .book {
+    --book-h: 152px;
   }
 }
 

@@ -1,6 +1,6 @@
 export const COPY = {
-  eyebrow: 'Three levels',
-  title: 'Choose your trial',
+  eyebrow: 'Choose your trial',
+  title: 'Three volumes',
   cue: 'Scroll to explore',
   chapterEyebrow: 'Level',
   begin: 'Begin',
