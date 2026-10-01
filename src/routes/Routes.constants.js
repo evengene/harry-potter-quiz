@@ -4,5 +4,6 @@ export const ROUTES =  {
   questions: '/questions',
   questionId: '/questions/:questionId',
   results: '/results',
+  scores: '/scores',
   about: '/about',
 }

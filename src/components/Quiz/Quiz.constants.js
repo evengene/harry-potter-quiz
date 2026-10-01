@@ -290,7 +290,7 @@ export const COPY = {
   note: '10 questions',
   ready: 'When you are ready',
   chooseLevel: 'Choose level',
-  start: 'Explore',
+  start: 'Play',
   back: '\u2190 Back',
   answerKeys: ['A', 'B', 'C', 'D'],
 }

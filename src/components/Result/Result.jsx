@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,8 +8,9 @@ import { Wrapper } from '../Wrapper';
 import { Sigil } from '../Sigil';
 import { getQuestions } from '../Quiz/Quiz.constants';
 
-import { restart } from '../../quizSlice';
+import { quizStart, restart } from '../../quizSlice';
 import { ROUTES } from '../../routes/Routes.constants';
+import { recordScore } from '../../scores';
 
 const Result = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,8 @@ const Result = () => {
   const navigate = useNavigate();
 
   const [showReview, setShowReview] = useState(false);
+  const [outcome, setOutcome] = useState(null);
+  const recorded = useRef(false);
 
   const quiz = getQuestions(level);
   const score = getScore(answers);
@@ -31,9 +34,16 @@ const Result = () => {
     }
   }, [showScore, navigate]);
 
+  useEffect(() => {
+    if (!showScore || recorded.current) return;
+    recorded.current = true;
+    recordScore(level, score, totalQuestions).then(setOutcome);
+  }, [showScore, level, score, totalQuestions]);
+
   const restartClickHandler = () => {
     dispatch(restart());
-    navigate(ROUTES.home);
+    dispatch(quizStart());
+    navigate(ROUTES.questions);
   };
 
   return (
@@ -46,6 +56,13 @@ const Result = () => {
           {score}<span className="points-total"> / {totalQuestions}</span>
         </p>
       </div>
+
+      {outcome?.beaten && <span className="best-flag">{COPY.newBest}</span>}
+      {outcome && !outcome.beaten && (
+        <span className="best-note">
+          {COPY.bestSoFar} {outcome.best}/{totalQuestions}
+        </span>
+      )}
       <p className="intro-description center">
         {getMessageBasedOnScore(score, totalQuestions)}
       </p>
