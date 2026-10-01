@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { configureStore } from '@reduxjs/toolkit';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import './main.css';
 import { ROUTES } from './routes/Routes.constants';
@@ -47,5 +48,6 @@ root.render(
   <Provider store={store}>
     <RouterProvider router={router} />
     <Analytics />
+    <SpeedInsights/>
   </Provider>,
 )
