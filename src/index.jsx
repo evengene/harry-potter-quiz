@@ -10,6 +10,7 @@ import Question from './components/Question/Question';
 import Result from './components/Result/Result';
 import ChooseLevel from './components/ChooseLevel/ChooseLevel';
 import LevelPicker from './components/LevelPicker/LevelPicker';
+import About from './components/About/About';
 import quizReducer from './quizSlice';
 
 const router = createBrowserRouter([
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: ROUTES.results,
     element:  <Result />,
+  },
+  {
+    path: ROUTES.about,
+    element: <About />,
   }
 ]);
 

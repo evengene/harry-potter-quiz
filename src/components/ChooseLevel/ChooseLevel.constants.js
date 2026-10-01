@@ -3,7 +3,7 @@ export const COPY = {
   title: 'Three volumes',
   cue: 'Scroll to explore',
   chapterEyebrow: 'Level',
-  begin: 'Begin',
+  begin: 'Start quiz',
 }
 
 /**

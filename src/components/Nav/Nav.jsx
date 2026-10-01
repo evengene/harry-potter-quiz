@@ -16,6 +16,17 @@ export const Nav = () => {
 
   const playTo = isPlaying ? ROUTES.questions : ROUTES.home;
 
+  const locked = (to, label) =>
+    isPlaying ? (
+      <span className="site-nav-link" aria-disabled="true" title={COPY.levelsLocked}>
+        {label}
+      </span>
+    ) : (
+      <Link to={to} className={linkClass(to)}>
+        {label}
+      </Link>
+    );
+
   return (
     <nav className="site-nav">
       <Link to={ROUTES.home} className="site-nav-logo">
@@ -29,22 +40,11 @@ export const Nav = () => {
 
         <span className="site-nav-sep" />
 
-        {isPlaying ? (
-          <span
-            className="site-nav-link"
-            aria-disabled="true"
-            title={COPY.levelsLocked}
-          >
-            {COPY.levels}
-          </span>
-        ) : (
-          <Link
-            to={ROUTES.chooseLevel}
-            className={linkClass(ROUTES.chooseLevel)}
-          >
-            {COPY.levels}
-          </Link>
-        )}
+        {locked(ROUTES.chooseLevel, COPY.levels)}
+
+        <span className="site-nav-sep" />
+
+        {locked(ROUTES.about, COPY.about)}
       </div>
 
       <span className="site-nav-meta">{isPlaying ? COPY.inProgress : ''}</span>
