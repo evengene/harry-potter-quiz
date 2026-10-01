@@ -16,7 +16,7 @@
     </p>
 
 <p align="center">
-  <img src="./src/assets/cover-hp.jpg" alt="Your Image Description">
+  <img src="./src/assets/cover.jpg" alt="Your Image Description">
 </p>
 
 ## Demo
