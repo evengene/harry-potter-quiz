@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { getScore, getMessageBasedOnScore } from "./Result.utils";
+import { getScore, getMessageBasedOnScore, getReview } from "./Result.utils";
 import { COPY } from './Result.constants';
 import { Wrapper } from '../Wrapper';
 import { Sigil } from '../Sigil';
@@ -18,8 +18,12 @@ const Result = () => {
   const level = useSelector((state) => state.quiz.level);
   const navigate = useNavigate();
 
+  const [showReview, setShowReview] = useState(false);
+
+  const quiz = getQuestions(level);
   const score = getScore(answers);
-  const totalQuestions = getQuestions(level).length;
+  const totalQuestions = quiz.length;
+  const review = getReview(answers, quiz);
 
   useEffect(() => {
     if (!showScore) {
@@ -45,9 +49,48 @@ const Result = () => {
       <p className="intro-description center">
         {getMessageBasedOnScore(score, totalQuestions)}
       </p>
+
       <button onClick={restartClickHandler} className="default-btn">
         {COPY.restart}
       </button>
+
+      <button
+        onClick={() => setShowReview((open) => !open)}
+        className="default-btn outlined-button"
+        aria-expanded={showReview}
+        aria-controls="review-list"
+      >
+        {showReview ? COPY.reviewHide : COPY.review}
+      </button>
+
+      {showReview && (
+        <ol className="review" id="review-list">
+          {review.map((row) => (
+            <li className="review-row" data-correct={row.isCorrect} key={row.number}>
+              <span className="review-num">{String(row.number).padStart(2, '0')}</span>
+              <p className="review-q">{row.questionText}</p>
+
+              {/* Labelled rather than only coloured, so the outcome still
+                  reads without relying on telling green from red. */}
+              <p className="review-a">
+                <span className="review-label">
+                  {row.answered ? COPY.chose : ''}
+                </span>
+                <span className={`review-given${row.answered ? '' : ' is-skipped'}`}>
+                  {row.answered ? row.chosen : COPY.skipped}
+                </span>
+              </p>
+
+              {!row.isCorrect && row.correct && (
+                <p className="review-a">
+                  <span className="review-label">{COPY.answer}</span>
+                  <span className="review-right">{row.correct}</span>
+                </p>
+              )}
+            </li>
+          ))}
+        </ol>
+      )}
     </Wrapper>
   );
 };

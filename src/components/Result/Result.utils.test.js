@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { getScore, getMessageBasedOnScore } from './Result.utils';
+import { getScore, getMessageBasedOnScore, getReview } from './Result.utils';
 import { COPY } from './Result.constants';
 
 describe('getScore', () => {
@@ -59,5 +59,57 @@ describe('getMessageBasedOnScore', () => {
   it('picks the right message either side of a boundary', () => {
     expect(getMessageBasedOnScore(7, 10)).toBe(COPY.good);
     expect(getMessageBasedOnScore(9, 10)).toBe(COPY.excellent);
+  });
+});
+
+describe('getReview', () => {
+  const questions = [
+    {
+      questionText: 'Harry\u2019s owl?',
+      answerOptions: [
+        { text: 'Errol', isCorrect: false },
+        { text: 'Hedwig', isCorrect: true },
+      ],
+    },
+    {
+      questionText: 'Harry\u2019s wand core?',
+      answerOptions: [
+        { text: 'Phoenix feather', isCorrect: true },
+        { text: 'Dragon heartstring', isCorrect: false },
+      ],
+    },
+  ];
+
+  it('reports what was chosen and what was right', () => {
+    const rows = getReview([{ isCorrect: true, idx: 1 }, { isCorrect: false, idx: 1 }], questions);
+
+    expect(rows[0]).toMatchObject({
+      number: 1, answered: true, isCorrect: true, chosen: 'Hedwig', correct: 'Hedwig',
+    });
+    expect(rows[1]).toMatchObject({
+      number: 2, answered: true, isCorrect: false, chosen: 'Dragon heartstring', correct: 'Phoenix feather',
+    });
+  });
+
+  it('lists every question even when the run is short', () => {
+    const rows = getReview([{ isCorrect: true, idx: 1 }], questions);
+
+    expect(rows).toHaveLength(2);
+    expect(rows[1]).toMatchObject({ answered: false, isCorrect: false, chosen: null });
+    // Still tells you the answer to one that was never reached.
+    expect(rows[1].correct).toBe('Phoenix feather');
+  });
+
+  it('survives an index that does not match the options', () => {
+    const rows = getReview([{ isCorrect: false, idx: 99 }], questions);
+
+    expect(rows[0].chosen).toBeNull();
+    expect(rows[0].correct).toBe('Hedwig');
+  });
+
+  it('survives a question with no correct option marked', () => {
+    const broken = [{ questionText: 'Broken', answerOptions: [{ text: 'A', isCorrect: false }] }];
+
+    expect(getReview([{ isCorrect: false, idx: 0 }], broken)[0].correct).toBeNull();
   });
 });
