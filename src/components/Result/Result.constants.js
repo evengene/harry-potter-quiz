@@ -11,5 +11,7 @@ export const COPY = {
   reviewHide: 'Hide answers',
   chose: 'You chose',
   answer: 'Answer',
-  skipped: 'Not answered'
+  skipped: 'Not answered',
+  newBest: 'New best',
+  bestSoFar: 'Your best'
 }

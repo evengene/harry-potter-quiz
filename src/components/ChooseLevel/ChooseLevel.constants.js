@@ -4,6 +4,7 @@ export const COPY = {
   cue: 'Scroll to explore',
   chapterEyebrow: 'Level',
   begin: 'Start quiz',
+  best: 'Best',
 }
 
 /**

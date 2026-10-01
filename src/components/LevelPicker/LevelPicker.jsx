@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Wrapper } from '../Wrapper';
 import { Book } from '../Book';
+import { useScores } from '../../hooks/useScores';
 import { quizStart, setLevel } from '../../quizSlice';
 import { ROUTES } from '../../routes/Routes.constants';
 import { COPY, LEVELS } from '../ChooseLevel/ChooseLevel.constants';
@@ -10,6 +11,7 @@ import { COPY, LEVELS } from '../ChooseLevel/ChooseLevel.constants';
 const LevelPicker = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const scores = useScores();
 
   const onSelectLevel = (level) => () => {
     dispatch(setLevel(level));
@@ -31,6 +33,11 @@ const LevelPicker = () => {
             </span>
             <span className="block-name">{place}</span>
             <span className="block-note">{note}</span>
+            {scores?.[id] && (
+              <span className="block-best">
+                {COPY.best} {scores[id].best}/{scores[id].total}
+              </span>
+            )}
           </button>
         ))}
       </div>

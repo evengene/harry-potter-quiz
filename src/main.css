@@ -1118,6 +1118,14 @@ body {
   color: var(--starlight);
 }
 
+.block-best {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--correct);
+}
+
 .block-note {
   font-size: 17px;
   font-weight: 300;
@@ -1528,6 +1536,136 @@ body {
 .about-links .outlined-button {
   margin-top: 0;
   text-decoration: none;
+}
+
+.best-flag {
+  display: inline-flex;
+  align-items: center;
+  margin-top: var(--gap-md);
+  padding: 8px 22px;
+  background: rgba(111, 191, 159, 0.2);
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--correct);
+  clip-path: var(--hex);
+}
+
+.best-note {
+  margin-top: var(--gap-md);
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted-dim);
+}
+
+/* ----------------------------- records ---------------------------- */
+
+.records {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: min(760px, 100%);
+  margin-top: var(--gap-xl);
+  text-align: left;
+}
+
+.record-row {
+  display: grid;
+  grid-template-columns: minmax(170px, 1fr) auto auto;
+  align-items: center;
+  gap: clamp(18px, 3vw, 40px);
+  padding: 22px 26px;
+  background: var(--panel);
+  border-left: 2px solid var(--line-strong);
+}
+
+.record-row-level {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted-dim);
+}
+
+.record-row-place {
+  margin: 5px 0 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--starlight);
+}
+
+.figures {
+  display: flex;
+  gap: clamp(16px, 2.5vw, 34px);
+  margin: 0;
+}
+
+.figure dt {
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted-dim);
+}
+
+.figure dd {
+  margin: 3px 0 0;
+  font-family: var(--font-display);
+  font-size: 21px;
+  line-height: 1;
+  color: var(--starlight);
+}
+
+.figure dd span {
+  font-size: 13px;
+  color: var(--muted-dim);
+}
+
+.runs {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 42px;
+}
+
+.run {
+  width: 7px;
+  height: var(--run-height);
+  background: var(--line-strong);
+}
+
+.run[data-best='true'] {
+  background: var(--correct);
+}
+
+.record-untried {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+.records .outlined-button {
+  margin-top: 0;
+  min-width: 150px;
+}
+
+@media screen and (max-width: 720px) {
+  .record-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .runs {
+    height: 34px;
+  }
 }
 
 /* --------------------------- answer review ------------------------- */

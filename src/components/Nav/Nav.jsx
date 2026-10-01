@@ -44,6 +44,10 @@ export const Nav = () => {
 
         <span className="site-nav-sep" />
 
+        {locked(ROUTES.scores, COPY.scores)}
+
+        <span className="site-nav-sep" />
+
         {locked(ROUTES.about, COPY.about)}
       </div>
 
