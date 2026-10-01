@@ -7,7 +7,6 @@ import { Analytics } from '@vercel/analytics/react';
 import './main.css';
 import { ROUTES } from './routes/Routes.constants';
 import Question from './components/Question/Question';
-import Quiz from './components/Quiz/Quiz';
 import Result from './components/Result/Result';
 import ChooseLevel from './components/ChooseLevel/ChooseLevel';
 import quizReducer from './quizSlice';
@@ -15,7 +14,7 @@ import quizReducer from './quizSlice';
 const router = createBrowserRouter([
   {
     path: ROUTES.home,
-    element:  <Quiz />,
+    element: <ChooseLevel />,
   },
   {
     path: ROUTES.chooseLevel,

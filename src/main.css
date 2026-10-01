@@ -261,6 +261,220 @@ body {
   margin-top: 0;
 }
 
+/* ---------------------- castle level select ---------------------- */
+
+.castle-scroll {
+  position: relative;
+  flex-shrink: 0;
+  height: 340vh;
+  height: 340svh;
+}
+
+.castle-pin {
+  --zoom: 1.08;
+  --ox: 50%;
+  --oy: 50%;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+/* One canvas, one compositor layer. Everything the ten stacked layers used
+   to do — depth, drift, window lighting — now happens inside it. */
+.castle-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.castle-picker {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 5;
+  padding: 10px 18px;
+  background: rgba(9, 13, 20, 0.85);
+  border: 1px solid var(--line-strong);
+  color: var(--starlight);
+  font-family: var(--mono, ui-monospace, Menlo, monospace);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+.castle-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 52% at 50% 52%, rgba(9, 13, 20, 0.7) 0%, rgba(9, 13, 20, 0.3) 58%, rgba(9, 13, 20, 0) 100%),
+    linear-gradient(to bottom, rgba(9, 13, 20, 0.55) 0%, rgba(9, 13, 20, 0.2) 34%, rgba(9, 13, 20, 0.5) 70%, rgba(9, 13, 20, 0.88) 100%);
+}
+
+.castle-intro {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-inline: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 420ms var(--ease), visibility 420ms;
+}
+
+.castle-pin[data-active='-1'] .castle-intro { opacity: 1; visibility: visible; }
+
+/* A callout pinned to the point the camera rests on: a node on the castle,
+   a thin line out, and the text at the end of it. The node sits exactly at
+   the camera's own anchor, so line and lens can never disagree. */
+.guide {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 400ms var(--ease), visibility 400ms;
+}
+
+.castle-pin[data-active='0'] .guide[data-i='0'],
+.castle-pin[data-active='1'] .guide[data-i='1'],
+.castle-pin[data-active='2'] .guide[data-i='2'] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.guide-node {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--starlight);
+  border-radius: 50%;
+  background: rgba(234, 242, 248, 0.25);
+}
+
+.guide-node::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.guide-arm {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: max-content;
+  max-width: min(420px, 38vw);
+  transform: translateY(calc(-50% + var(--label-drop, 0px)));
+}
+
+/* Vertical half of the elbow: drops from the node to the arm's own centre,
+   so a lowered label still reads as attached to the point it describes. */
+.guide::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: var(--label-drop, 0px);
+  background: var(--line-strong);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 420ms var(--ease) 80ms;
+}
+
+.castle-pin[data-active='0'] .guide[data-i='0']::before,
+.castle-pin[data-active='1'] .guide[data-i='1']::before,
+.castle-pin[data-active='2'] .guide[data-i='2']::before {
+  transform: scaleY(1);
+}
+
+.guide[data-side='right'] .guide-arm { left: 14px; }
+
+.guide[data-side='left'] .guide-arm {
+  right: 14px;
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+/* The line draws itself out when the level arrives. */
+.guide-line {
+  flex-shrink: 0;
+  width: 0;
+  height: 1px;
+  background: var(--line-strong);
+  transition: width 520ms var(--ease) 120ms;
+}
+
+.castle-pin[data-active='0'] .guide[data-i='0'] .guide-line,
+.castle-pin[data-active='1'] .guide[data-i='1'] .guide-line,
+.castle-pin[data-active='2'] .guide[data-i='2'] .guide-line {
+  width: clamp(48px, 7vw, 96px);
+}
+
+.guide-text {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.guide[data-side='left'] .guide-text { align-items: flex-end; }
+
+.guide-title {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.4vw, 40px);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--starlight);
+  margin: 0;
+}
+
+.guide-blurb {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: #A8B6C6;
+  text-shadow: 0 1px 18px rgba(9, 13, 20, 0.85);
+}
+
+.guide-text .default-btn { margin-top: 6px; }
+
+.castle-intro .intro-description {
+  margin-top: var(--gap-md);
+}
+
+.castle-intro .default-btn {
+  margin-top: var(--gap-lg);
+}
+
+.castle-cue {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: var(--gap-xl);
+}
+
 /* ------------------------ opening sequence ----------------------- */
 
 /* Black over everything, clearing to reveal the scene. */
@@ -449,6 +663,28 @@ body {
   width: 100%;
 }
 
+/* Corner brackets, in the same thin-line language as the sigil. Four corners
+   needs four pseudo-elements, so the panel draws two and the wrapper two. */
+.quiz-panel::before,
+.quiz-panel::after,
+.quiz-panel-wrap::before,
+.quiz-panel-wrap::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: var(--line-strong);
+  border-style: solid;
+  border-width: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.quiz-panel::before  { top: -1px; left: -1px; border-top-width: 1px; border-left-width: 1px; }
+.quiz-panel::after   { bottom: -1px; right: -1px; border-bottom-width: 1px; border-right-width: 1px; }
+.quiz-panel-wrap::before { top: -1px; right: -1px; border-top-width: 1px; border-right-width: 1px; }
+.quiz-panel-wrap::after  { bottom: -1px; left: -1px; border-bottom-width: 1px; border-left-width: 1px; }
+
 .quiz-panel-wrap {
   position: relative;
   display: flex;
@@ -485,10 +721,22 @@ body {
 }
 
 .info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
   font-family: var(--font-display);
   color: var(--muted);
   letter-spacing: 0.3em;
   font-size: 11px;
+}
+
+.info::before,
+.info::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
 }
 
 .progress-bar {
@@ -583,8 +831,8 @@ body {
   text-align: left;
   cursor: pointer;
   box-sizing: border-box;
-  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
-    color var(--dur) var(--ease), transform var(--dur-fast) var(--ease);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease), filter var(--dur) var(--ease);
   animation: rise var(--dur) var(--ease) backwards;
 }
 
@@ -611,6 +859,8 @@ body {
 .answer-button:hover {
   background: rgba(62, 88, 114, 0.85);
   color: var(--starlight);
+  /* drop-shadow follows the hexagon; box-shadow would be clipped away. */
+  filter: drop-shadow(0 0 10px rgba(191, 212, 230, 0.35));
 }
 
 .answer-button:hover .answer-key {
@@ -621,6 +871,7 @@ body {
 .answer-button.correct {
   background: rgba(111, 191, 159, 0.55);
   color: var(--starlight);
+  filter: drop-shadow(0 0 16px rgba(111, 191, 159, 0.85));
 }
 
 .answer-button.correct .answer-key {
@@ -632,6 +883,7 @@ body {
 .answer-button.incorrect {
   background: rgba(176, 92, 102, 0.55);
   color: var(--starlight);
+  filter: drop-shadow(0 0 16px rgba(176, 92, 102, 0.8));
 }
 
 .answer-button.incorrect .answer-key {
@@ -727,12 +979,18 @@ body {
   transform: translateY(-5px);
 }
 
+/* Everything below is a proportion of --book-h, so the book can be resized
+   from that one variable and still look like the same object. Scaling the
+   height alone left the spine at its full width, which on the thickest book
+   made it 40% of the cover instead of 19%. */
 .book {
-  --spine: 18px;
+  --book-h: 236px;
+  --spine-ratio: 0.076;
+  --spine: calc(var(--book-h) * var(--spine-ratio));
   position: relative;
   display: block;
-  width: calc(158px + var(--spine));
-  height: 236px;
+  width: calc(var(--book-h) * 0.669 + var(--spine));
+  height: var(--book-h);
 }
 
 .book-spine {
@@ -761,7 +1019,7 @@ body {
 .book-cover:before {
   content: "";
   position: absolute;
-  inset: 12px;
+  inset: calc(var(--book-h) * 0.051);
   border: 1px solid var(--line);
 }
 
@@ -775,8 +1033,8 @@ body {
 }
 
 .book-image {
-  width: 62px;
-  height: 62px;
+  width: calc(var(--book-h) * 0.263);
+  height: calc(var(--book-h) * 0.263);
   object-fit: contain;
   opacity: 0.85;
 }
@@ -792,6 +1050,222 @@ body {
   font-size: 17px;
   font-weight: 300;
   color: var(--muted);
+}
+
+/* ------------------ portrait: castle + level sheet ------------------ */
+/* Below 3:2 the wide artwork would be cropped past recognition, so portrait
+   runs off its own illustration: fitted to the viewport width, hung from the
+   top, with the levels arriving one at a time over the mist at its foot. */
+
+.castle-scroll-portrait {
+  height: 300vh;
+  height: 300svh;
+}
+
+.castle-pin-portrait {
+  --sheet-h: 52svh;
+  display: block;
+  background: var(--ink);
+}
+
+.hero-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Holds the artwork's own ratio, so every anchor inside is a plain
+   percentage of the drawing and cannot drift from it. */
+.hero-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2400 / 3000;
+}
+
+.hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Softer than the wide layout's veil: this artwork is already dark, and the
+   castle has to stay readable through it. Weighted to the top, where the nav
+   sits, and the bottom, where it hands over to the sheet. */
+.castle-pin-portrait .castle-veil {
+  background: linear-gradient(
+    to bottom,
+    rgba(9, 13, 20, 0.52) 0%,
+    rgba(9, 13, 20, 0.1) 26%,
+    rgba(9, 13, 20, 0.22) 58%,
+    var(--ink) 100%
+  );
+}
+
+/* The lit windows are painted into the artwork and cannot be switched on one
+   wing at a time, so arriving somewhere warms the area around it instead. */
+.hero-glow {
+  position: absolute;
+  width: 78vw;
+  height: 78vw;
+  margin: -39vw 0 0 -39vw;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 216, 158, 0.3) 0%,
+    rgba(255, 206, 150, 0.1) 40%,
+    rgba(255, 200, 140, 0) 70%
+  );
+  opacity: 0;
+  transition: opacity 560ms var(--ease);
+  pointer-events: none;
+}
+
+.castle-pin[data-active='0'] .hero-glow[data-i='0'],
+.castle-pin[data-active='1'] .hero-glow[data-i='1'],
+.castle-pin[data-active='2'] .hero-glow[data-i='2'] {
+  opacity: 1;
+}
+
+/* A hairline from the landmark down to the card that describes it — the
+   portrait answer to the wide layout's guide line. */
+/* Runs to the foot of the artwork and is covered by the sheet's scrim where
+   the two meet, so it fades into the mist instead of crossing the card. */
+.hero-thread {
+  position: absolute;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    rgba(234, 242, 248, 0.7),
+    rgba(234, 242, 248, 0.12)
+  );
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: opacity 320ms var(--ease), transform 520ms var(--ease) 100ms;
+  z-index: 1;
+}
+
+.hero-thread::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--starlight);
+  border-radius: 50%;
+  background: rgba(234, 242, 248, 0.3);
+}
+
+.castle-pin[data-active='0'] .hero-thread[data-i='0'],
+.castle-pin[data-active='1'] .hero-thread[data-i='1'],
+.castle-pin[data-active='2'] .hero-thread[data-i='2'] {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.castle-pin-portrait .castle-intro {
+  inset: 0;
+  transform: none;
+  justify-content: center;
+  z-index: 4;
+}
+
+.castle-pin-portrait .castle-stack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--sheet-h);
+  z-index: 2;
+}
+
+/* Carries the artwork's foot down into solid ink so the card reads cleanly
+   over the mist it overlaps. */
+.castle-pin-portrait .castle-stack::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: -16svh;
+  background: linear-gradient(
+    to bottom,
+    rgba(9, 13, 20, 0) 0%,
+    rgba(9, 13, 20, 0.74) 44%,
+    var(--ink) 100%
+  );
+  pointer-events: none;
+}
+
+.sheet-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 20px 26px;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(18px);
+}
+
+.castle-pin[data-active='0'] .sheet-card[data-i='0'],
+.castle-pin[data-active='1'] .sheet-card[data-i='1'],
+.castle-pin[data-active='2'] .sheet-card[data-i='2'] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+/* The intro and the three cards overlap, where on the wide layout the
+   callouts sit off to the side. A plain crossfade therefore puts two blocks
+   of text on top of each other for its whole duration, so the one leaving
+   goes quickly and the one arriving waits for it to finish. A transition is
+   taken from the state being moved TO, so the short pair below is the exit
+   and the delayed pair is the entrance. */
+.castle-pin-portrait .castle-intro,
+.sheet-card {
+  transition: opacity 180ms var(--ease), visibility 180ms,
+    transform 280ms var(--ease);
+}
+
+.castle-pin-portrait[data-active='-1'] .castle-intro,
+.castle-pin[data-active='0'] .sheet-card[data-i='0'],
+.castle-pin[data-active='1'] .sheet-card[data-i='1'],
+.castle-pin[data-active='2'] .sheet-card[data-i='2'] {
+  transition: opacity 360ms var(--ease) 190ms, visibility 360ms 190ms,
+    transform 520ms var(--ease) 190ms;
+}
+
+/* The list book is 236px tall, which does not fit a sheet on a 667px phone.
+   One variable now carries the spine and the cover inlay with it. flex: none
+   because a column flex would otherwise shrink whichever card has the
+   longest blurb, leaving the three levels with different sized books. */
+.sheet-card .book {
+  --book-h: clamp(72px, 11svh, 140px);
+  flex: none;
+}
+
+/* The eyebrow carries a 26px bottom margin for the list layout; here the
+   card's own gap sets the rhythm. */
+.sheet-card .eyebrow {
+  margin-bottom: 0;
+}
+
+.sheet-card .guide-title {
+  font-size: clamp(22px, 6.5vw, 32px);
+}
+
+.sheet-card .guide-blurb {
+  max-width: 34em;
+  font-size: clamp(14px, 3.8vw, 16px);
+  line-height: 1.55;
 }
 
 /* -------------------------- starfield ---------------------------- */
@@ -890,6 +1364,9 @@ body {
   .mote {
     display: none;
   }
+  .castle-layer {
+    animation: none !important;
+  }
   .hero-image {
     animation: none !important;
     transform: scale(1.05);
@@ -922,6 +1399,24 @@ body {
   .quiz-panel {
     padding: 22px 18px 28px;
   }
+  .guide {
+    left: 50% !important;
+    top: auto !important;
+    bottom: 12svh;
+  }
+  .guide-node { display: none; }
+  .guide-line { display: none; }
+  .guide-arm,
+  .guide[data-side='left'] .guide-arm {
+    left: auto;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: min(420px, 88vw);
+    flex-direction: column;
+    text-align: center;
+  }
+  .guide[data-side='left'] .guide-text,
+  .guide-text { align-items: center; }
 
   .answer-button {
     padding: 16px 26px;
@@ -930,12 +1425,7 @@ body {
     gap: 34px;
   }
   .book {
-    width: calc(114px + var(--spine));
-    height: 178px;
-  }
-  .book-image {
-    width: 46px;
-    height: 46px;
+    --book-h: 178px;
   }
 }
 

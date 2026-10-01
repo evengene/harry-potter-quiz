@@ -23,3 +23,6 @@ yarn-error.log*
 
 # vite build output
 /dist
+
+# full-size artwork masters (kept locally, not shipped)
+/artwork-originals
