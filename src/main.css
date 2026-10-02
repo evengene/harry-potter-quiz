@@ -1332,15 +1332,6 @@ body {
     transform 520ms var(--ease) 190ms;
 }
 
-/* The list book is 236px tall, which does not fit a sheet on a 667px phone.
-   One variable now carries the spine and the cover inlay with it. flex: none
-   because a column flex would otherwise shrink whichever card has the
-   longest blurb, leaving the three levels with different sized books. */
-.sheet-card .book {
-  --book-h: clamp(72px, 11svh, 140px);
-  flex: none;
-}
-
 /* The eyebrow carries a 26px bottom margin for the list layout; here the
    card's own gap sets the rhythm. */
 .sheet-card .eyebrow {

@@ -1,6 +1,6 @@
 export const COPY = {
-  eyebrow: 'Choose your trial',
-  title: 'Three volumes',
+  eyebrow: 'Three volumes',
+  title: 'Choose your level',
   cue: 'Scroll to explore',
   chapterEyebrow: 'Level',
   begin: 'Start quiz',
@@ -49,7 +49,6 @@ export const LEVELS = [
     zoom: 1.55,
     anchor: { x: 38, y: 49 },
     side: 'right',
-    region: { x1: 35, y1: 38, x2: 43, y2: 53 },
     blurb: 'Welcome to the Great Hall - the heart of Hogwarts and the perfect place to start',
   },
   {
@@ -63,7 +62,6 @@ export const LEVELS = [
     zoom: 2.05,
     anchor: { x: 63, y: 54 },
     side: 'left',
-    region: { x1: 61, y1: 49, x2: 65, y2: 59 },
     blurb: 'The East Tower rewards those who have done their homework.',
   },
   {
@@ -77,7 +75,6 @@ export const LEVELS = [
     zoom: 2.7,
     anchor: { x: 45, y: 26 },
     side: 'left',
-    region: { x1: 41, y1: 21, x2: 49, y2: 33 },
     blurb: 'The Headmaster’s Tower is reserved for those who know Hogwarts inside and out.',
   },
 ]

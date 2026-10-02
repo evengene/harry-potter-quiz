@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { Nav } from '../Nav';
 import { Starfield } from '../Starfield';
 import { CastleStage } from '../CastleStage';
-import { Book } from '../Book';
 import LevelPicker from '../LevelPicker/LevelPicker';
 import mobileScene from '../../assets/artwork/mobile.jpg';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
@@ -28,9 +27,6 @@ const TARGETS = [
   { zoom: 1.0, ox: 50, oy: 50 },
   ...LEVELS.map((l) => ({ zoom: l.zoom, ox: l.anchor.x, oy: l.anchor.y })),
 ];
-
-// Region bounds in the same order as the camera's level stops.
-const REGIONS = LEVELS.map((l) => l.region);
 
 const lerp = (a, b, t) => a + (b - a) * t;
 
@@ -198,9 +194,8 @@ const ChooseLevel = () => {
             {intro}
 
             <div className="castle-stack">
-              {LEVELS.map(({ id, name, place, blurb, spine }, i) => (
+              {LEVELS.map(({ id, name, place, blurb }, i) => (
                 <article className="sheet-card" data-i={i} key={id}>
-                  <Book spine={spine} />
                   <span className="eyebrow">
                     {COPY.chapterEyebrow} {i + 1} — {name}
                   </span>
@@ -227,7 +222,7 @@ const ChooseLevel = () => {
 
       <section className="castle-scroll" ref={scrollRef}>
         <div className="castle-pin" ref={pinRef} data-active="-1">
-          <CastleStage camera={camera} regions={REGIONS} />
+          <CastleStage camera={camera} />
           <div className="castle-veil" />
 
           {intro}

@@ -9,7 +9,7 @@ import castle from '../../assets/artwork/04-castle.png';
 import windowsEasy from '../../assets/artwork/glowing-windows-level-1.png';
 import windowsMedium from '../../assets/artwork/glowing-windows-level-2.png';
 import windowsHard from '../../assets/artwork/glowing-windows-level-3.png';
-import foreground from '../../assets/artwork/06-foreground.png';
+import foreground from '../../assets/artwork/foreground-2.png';
 
 /**
  * The scene is painted into a single canvas rather than stacked as ten
@@ -44,6 +44,7 @@ const LAYERS = [
 const WINDOW_LIT = 1;
 const WINDOW_DARK = 0.16;
 const WINDOW_IDLE = 0.5;
+const GLOW_FROM = 1.3;
 
 const BASE_INDEX = LAYERS.findIndex((l) => l.base);
 
@@ -52,7 +53,7 @@ const BASE_INDEX = LAYERS.findIndex((l) => l.base);
  * Narrower than that, this artwork would be cropped past recognition and the
  * portrait layout runs off its own illustration instead.
  */
-export const CastleStage = ({ camera, regions = [] }) => {
+export const CastleStage = ({ camera }) => {
   const canvasRef = useRef(null);
   const readoutRef = useRef(null);
 
@@ -107,8 +108,8 @@ export const CastleStage = ({ camera, regions = [] }) => {
     };
 
     // Where a layer lands on the canvas. Everything that has to agree with
-    // the artwork — the light pool, the shading, the viewfinder, the picker —
-    // reads the base layer's rect from here rather than recomputing it.
+    // the artwork — the light pool, the shading, the picker — reads the base
+    // layer's rect from here rather than recomputing it.
     const place = (img, layer, zoom, ox, oy) => {
       const basis = Math.max(width / img.naturalWidth, height / img.naturalHeight);
       const scale = basis * (1 + (zoom - 1) * layer.depth);
@@ -141,6 +142,7 @@ export const CastleStage = ({ camera, regions = [] }) => {
 
       const { zoom, ox, oy, active } = camera.current;
       const seconds = time / 1000;
+      const zoomGlow = Math.min(Math.max((zoom - 1) / (GLOW_FROM - 1), 0), 1);
       let baseRect = null;
 
       ctx.clearRect(0, 0, width, height);
@@ -154,7 +156,7 @@ export const CastleStage = ({ camera, regions = [] }) => {
           const target =
             active < 0 ? WINDOW_IDLE : active === layer.level ? WINDOW_LIT : WINDOW_DARK;
           lit[i] += (target - lit[i]) * 0.06;
-          alpha = lit[i];
+          alpha = lit[i] * zoomGlow;
         } else if (layer.pulse) {
           const [lo, hi] = layer.pulse;
           const t = (Math.sin((seconds / layer.period) * Math.PI * 2) + 1) / 2;
@@ -241,32 +243,6 @@ export const CastleStage = ({ camera, regions = [] }) => {
         ctx.fillRect(0, 0, width, height);
       }
 
-      // A viewfinder around the region that lights up: four corner marks in
-      // the same thin-line language as the panels.
-      const region = regions[active];
-      if (region && pool.value > 0.04) {
-        const pad = 14;
-        const x1 = baseRect.x + baseRect.w * (region.x1 / 100) - pad;
-        const y1 = baseRect.y + baseRect.h * (region.y1 / 100) - pad;
-        const x2 = baseRect.x + baseRect.w * (region.x2 / 100) + pad;
-        const y2 = baseRect.y + baseRect.h * (region.y2 / 100) + pad;
-        const arm = Math.min(26, Math.max(12, (x2 - x1) * 0.18));
-
-        ctx.globalAlpha = pool.value * 0.85;
-        ctx.strokeStyle = 'rgba(234, 242, 248, 0.9)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        // top-left
-        ctx.moveTo(x1, y1 + arm); ctx.lineTo(x1, y1); ctx.lineTo(x1 + arm, y1);
-        // top-right
-        ctx.moveTo(x2 - arm, y1); ctx.lineTo(x2, y1); ctx.lineTo(x2, y1 + arm);
-        // bottom-right
-        ctx.moveTo(x2, y2 - arm); ctx.lineTo(x2, y2); ctx.lineTo(x2 - arm, y2);
-        // bottom-left
-        ctx.moveTo(x1 + arm, y2); ctx.lineTo(x1, y2); ctx.lineTo(x1, y2 - arm);
-        ctx.stroke();
-      }
-
       ctx.globalAlpha = 1;
       frame = requestAnimationFrame(draw);
     };
@@ -294,7 +270,7 @@ export const CastleStage = ({ camera, regions = [] }) => {
       cancelAnimationFrame(frame);
       canvas.removeEventListener('click', onPick);
     };
-  }, [camera, picking, regions]);
+  }, [camera, picking]);
 
   return (
     <>
